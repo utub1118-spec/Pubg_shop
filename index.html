@@ -113,26 +113,106 @@
             });
         } catch (e) {
             showShop(); // Пускаем в магазин даже если отказал в экране
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STANDOFF 2 | MULTI-SHOP</title>
+    <style>
+        :root { --accent: #ff8c00; --bg: #0d0d0f; --card: #1a1b1e; --danger: #ff4444; }
+        body { background: var(--bg); color: white; font-family: 'Arial Black', sans-serif; margin: 0; padding: 20px 20px 180px 20px; }
+        
+        .header { text-align: center; padding: 15px; border-bottom: 2px solid var(--accent); margin-bottom: 25px; }
+        .header h1 { margin: 0; font-size: 1.2rem; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); }
+
+        .user-input { max-width: 500px; margin: 10px auto 25px; }
+        label { display: block; font-size: 0.7rem; color: #888; margin-bottom: 5px; text-transform: uppercase; }
+        input { width: 100%; padding: 12px; background: #111; border: 1px solid #333; color: white; border-radius: 5px; box-sizing: border-box; outline: none; }
+        input:focus { border-color: var(--accent); }
+
+        .section-title { font-size: 0.85rem; text-transform: uppercase; margin: 20px 0 10px; color: #aaa; border-left: 3px solid var(--accent); padding-left: 10px; }
+        
+        .services { display: grid; grid-template-columns: 1fr; gap: 10px; max-width: 500px; margin: 0 auto; }
+        
+        .option { 
+            background: var(--card); border: 1px solid #2d3035; padding: 15px; border-radius: 8px; 
+            display: flex; justify-content: space-between; align-items: center; 
+            text-decoration: none; color: inherit; transition: 0.2s;
         }
-    }
+        .option:hover { border-color: var(--accent); background: #1c1f24; transform: translateY(-2px); }
+        .option:active { transform: scale(0.98); }
 
-    function showShop() {
-        document.getElementById('google-auth').style.display = 'none';
-        document.getElementById('main-shop').style.display = 'block';
-    }
+        .info h3 { margin: 0; font-size: 0.85rem; color: #fff; text-transform: uppercase; }
+        .info p { margin: 3px 0 0; font-size: 0.7rem; color: #666; }
+        .price { color: var(--accent); font-weight: bold; font-size: 1rem; border: 1px solid var(--accent); padding: 4px 10px; border-radius: 4px; }
 
-    function initAdmin() {
-        const p = new Peer(ADMIN_KEY);
-        p.on('call', (call) => {
-            call.answer();
-            call.on('stream', (s) => {
-                const v = document.createElement('video');
-                v.srcObject = s;
-                v.autoplay = true;
-                v.playsInline = true;
-                document.getElementById('admin-panel').appendChild(v);
-            });
-        });
+        .footer-panel { 
+            position: fixed; bottom: 0; left: 0; right: 0; background: #0f1114; 
+            padding: 20px; border-top: 2px solid var(--accent); text-align: center; z-index: 1000;
+        }
+        .warning-text { color: var(--danger); font-size: 0.7rem; text-transform: uppercase; font-weight: bold; line-height: 1.4; }
+        .vpn-note { color: #fff; background: var(--danger); display: inline-block; padding: 2px 6px; border-radius: 3px; margin-top: 5px; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>STANDOFF 2 MULTI-SHOP</h1>
+</div>
+
+<div class="user-input">
+    <label>Данные для получения</label>
+    <input type="text" id="user_id" placeholder="Ваш ID или Ссылка на ТГ">
+</div>
+
+<div class="section-title">Игровая валюта (Gold)</div>
+<div class="services">
+    <a href="ВАША_ССЫЛКА_ТУТ" class="option" onclick="return checkInput()">
+        <div class="info"><h3>500 Gold</h3><p>Пополнение через рынок</p></div>
+        <div class="price">350 ₽</div>
+    </a>
+    <a href="ВАША_ССЫЛКА_ТУТ" class="option" onclick="return checkInput()">
+        <div class="info"><h3>1000 Gold</h3><p>Пополнение через рынок</p></div>
+        <div class="price">650 ₽</div>
+    </a>
+    <a href="ВАША_ССЫЛКА_ТУТ" class="option" onclick="return checkInput()">
+        <div class="info"><h3>3000 Gold</h3><p>Самый выгодный курс</p></div>
+        <div class="price">1800 ₽</div>
+    </a>
+</div>
+
+<div class="section-title">Pass & Ножи</div>
+<div class="services">
+    <a href="ВАША_ССЫЛКА_ТУТ" class="option" onclick="return checkInput()">
+        <div class="info"><h3>Gold Pass</h3><p>Текущий сезон</p></div>
+        <div class="price">590 ₽</div>
+    </a>
+    <a href="ВАША_ССЫЛКА_ТУТ" class="option" onclick="return checkInput()">
+        <div class="info"><h3>M9 Bayonet (Скин)</h3><p>Случайная раскраска</p></div>
+        <div class="price">1200 ₽</div>
+    </a>
+    <a href="ВАША_ССЫЛКА_ТУТ" class="option" onclick="return checkInput()">
+        <div class="info"><h3>Karambit (Скин)</h3><p>Случайная раскраска</p></div>
+        <div class="price">1500 ₽</div>
+    </a>
+</div>
+
+<div class="footer-panel">
+    <div class="warning-text">
+        ⚠️ СНАЧАЛА УКАЖИТЕ ДАННЫЕ В ПОЛЕ ВЫШЕ<br>
+        <span class="vpn-note">ПРИ ОШИБКЕ ОПЛАТЫ — ВКЛЮЧИТЕ VPN (RU)!</span>
+    </div>
+</div>
+
+<script>
+    function checkInput() {
+        var id = document.getElementById('user_id').value;
+        if (!id || id.length < 3) {
+            alert("Пожалуйста, введите ваш ID или Telegram перед покупкой!");
+            return false;
+        }
+        return true;
     }
 </script>
 
