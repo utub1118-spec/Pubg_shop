@@ -5,105 +5,242 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>STANDOFF 2 | GOLD SHOP</title>
     <style>
-        :root { --accent: #ff8c00; --bg: #0d0d0f; --card: #1a1b1e; --danger: #ff4444; }
-        body { background: var(--bg); color: white; font-family: 'Arial Black', sans-serif; margin: 0; padding: 20px 20px 180px 20px; }
+        :root { --accent: #ff8c00; --bg: #0d0d0f; --card: #1a1b1e; --danger: #ff4444; --success: #00c853; }
+        body { background: var(--bg); color: white; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; margin: 0; padding-bottom: 120px; }
         
-        .header { text-align: center; padding: 15px; border-bottom: 2px solid var(--accent); margin-bottom: 25px; }
-        .header h1 { margin: 0; font-size: 1.2rem; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); }
+        .header { text-align: center; padding: 20px; border-bottom: 2px solid var(--accent); background: #111; }
+        .header h1 { margin: 0; font-size: 1.4rem; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); }
 
-        .user-input { max-width: 500px; margin: 10px auto 25px; }
+        .tabs { display: flex; justify-content: center; gap: 10px; margin: 20px 0; }
+        .tab-btn { background: #1a1b1e; border: 1px solid #333; color: #888; padding: 10px 20px; border-radius: 5px; cursor: pointer; text-transform: uppercase; font-size: 0.8rem; }
+        .tab-btn.active { border-color: var(--accent); color: white; background: #25262b; }
+
+        .container { max-width: 500px; margin: 0 auto; padding: 0 15px; }
+        
+        .user-input-box { background: var(--card); padding: 15px; border-radius: 10px; margin-bottom: 20px; border: 1px solid #2d3035; }
         label { display: block; font-size: 0.7rem; color: #888; margin-bottom: 5px; text-transform: uppercase; }
-        input { width: 100%; padding: 12px; background: #111; border: 1px solid #333; color: white; border-radius: 5px; box-sizing: border-box; outline: none; }
+        input { width: 100%; padding: 12px; background: #0a0a0a; border: 1px solid #333; color: white; border-radius: 5px; box-sizing: border-box; outline: none; margin-bottom: 10px; }
         input:focus { border-color: var(--accent); }
 
-        .section-title { font-size: 0.85rem; text-transform: uppercase; margin: 20px 0 10px; color: #aaa; border-left: 3px solid var(--accent); padding-left: 10px; }
-        
-        .services { display: grid; grid-template-columns: 1fr; gap: 10px; max-width: 500px; margin: 0 auto; }
+        .promo-group { display: flex; gap: 5px; }
+        .btn-apply { background: var(--accent); border: none; color: black; font-weight: bold; border-radius: 5px; padding: 0 15px; cursor: pointer; }
+
+        .services { display: none; grid-template-columns: 1fr; gap: 10px; }
+        .services.active { display: grid; }
         
         .option { 
             background: var(--card); border: 1px solid #2d3035; padding: 15px; border-radius: 8px; 
-            display: flex; justify-content: space-between; align-items: center; 
-            text-decoration: none; color: inherit; transition: 0.2s;
+            display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.2s;
         }
-        .option:hover { border-color: var(--accent); background: #1c1f24; transform: translateY(-2px); }
-        .option:active { transform: scale(0.98); }
+        .option:hover { border-color: var(--accent); transform: translateY(-2px); }
 
-        .info h3 { margin: 0; font-size: 0.85rem; color: #fff; text-transform: uppercase; }
+        .info h3 { margin: 0; font-size: 0.9rem; text-transform: uppercase; }
         .info p { margin: 3px 0 0; font-size: 0.7rem; color: #666; }
-        .price { color: var(--accent); font-weight: bold; font-size: 1rem; border: 1px solid var(--accent); padding: 4px 10px; border-radius: 4px; }
+        .price-tag { display: flex; flex-direction: column; align-items: flex-end; }
+        .old-price { font-size: 0.7rem; text-decoration: line-through; color: #666; display: none; }
+        .price { color: var(--accent); font-weight: bold; font-size: 1.1rem; border: 1px solid var(--accent); padding: 4px 10px; border-radius: 4px; margin-top: 2px; }
 
-        .footer-panel { 
-            position: fixed; bottom: 0; left: 0; right: 0; background: #0f1114; 
-            padding: 20px; border-top: 2px solid var(--accent); text-align: center; z-index: 1000;
-        }
-        .warning-text { color: var(--danger); font-size: 0.7rem; text-transform: uppercase; font-weight: bold; line-height: 1.4; }
-        .vpn-note { color: #fff; background: var(--danger); display: inline-block; padding: 2px 6px; border-radius: 3px; margin-top: 5px; }
+        /* Корзина */
+        .cart-toggle { position: fixed; top: 20px; right: 20px; background: var(--accent); color: black; padding: 10px; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; z-index: 2000; box-shadow: 0 4px 15px rgba(255,140,0,0.3); }
+        
+        #cart-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 3000; display: none; padding: 20px; }
+        .cart-content { max-width: 500px; margin: 50px auto; background: var(--card); border-radius: 10px; padding: 20px; position: relative; }
+        .close-cart { position: absolute; top: 10px; right: 15px; font-size: 1.5rem; cursor: pointer; }
+        .cart-item { display: flex; justify-content: space-between; border-bottom: 1px solid #333; padding: 10px 0; font-size: 0.9rem; }
+        
+        .pay-btn { width: 100%; background: var(--success); color: white; border: none; padding: 15px; border-radius: 8px; font-weight: bold; font-size: 1rem; margin-top: 20px; cursor: pointer; text-transform: uppercase; }
+
+        .footer-panel { position: fixed; bottom: 0; left: 0; right: 0; background: #0f1114; padding: 15px; border-top: 2px solid var(--accent); text-align: center; z-index: 1000; }
+        .warning-text { color: var(--danger); font-size: 0.7rem; text-transform: uppercase; font-weight: bold; }
     </style>
 </head>
 <body>
+
+<div class="cart-toggle" onclick="toggleCart()">🛒 <span id="cart-count">0</span></div>
 
 <div class="header">
     <h1>STANDOFF 2 GOLD SHOP</h1>
 </div>
 
-<div class="user-input">
-    <label>Данные для начисления</label>
-    <input type="text" id="user_id" placeholder="Ваш ID или Telegram">
+<div class="container">
+    <div class="tabs">
+        <div class="tab-btn active" onclick="showTab('gold')">Золото</div>
+        <div class="tab-btn" onclick="showTab('pass')">Season Pass</div>
+    </div>
+
+    <div class="user-input-box">
+        <label>ID или Telegram</label>
+        <input type="text" id="user_id" placeholder="Например: 12345678">
+        
+        <label>Промокод</label>
+        <div class="promo-group">
+            <input type="text" id="promo_input" placeholder="Введите код">
+            <button class="btn-apply" onclick="applyPromo()">OK</button>
+        </div>
+    </div>
+
+    <!-- Вкладка Золото -->
+    <div id="gold" class="services active">
+        <div class="option" onclick="addToCart('100 Gold', 89)">
+            <div class="info"><h3>100 Gold</h3><p>Рынок / Передача</p></div>
+            <div class="price-tag">
+                <span class="old-price">111 ₽</span>
+                <span class="price" data-base="89">89 ₽</span>
+            </div>
+        </div>
+        <div class="option" onclick="addToCart('500 Gold', 373)">
+            <div class="info"><h3>500 Gold</h3><p>Пополнение через рынок</p></div>
+            <div class="price-tag">
+                <span class="old-price">466 ₽</span>
+                <span class="price" data-base="373">373 ₽</span>
+            </div>
+        </div>
+        <div class="option" onclick="addToCart('1000 Gold', 724)">
+            <div class="info"><h3>1000 Gold</h3><p>Выгодный набор</p></div>
+            <div class="price-tag">
+                <span class="old-price">905 ₽</span>
+                <span class="price" data-base="724">724 ₽</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Вкладка Пассы -->
+    <div id="pass" class="services">
+        <div class="option" onclick="addToCart('Gold Pass', 568)">
+            <div class="info"><h3>Gold Pass</h3><p>Текущий сезон (Full)</p></div>
+            <div class="price-tag">
+                <span class="old-price">710 ₽</span>
+                <span class="price" data-base="568">568 ₽</span>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div class="section-title">Игровая валюта (Gold)</div>
-<div class="services">
-    <a href="ВАША_ССЫЛКА_ТУТ" class="option" onclick="return checkInput()">
-        <div class="info"><h3>100 Gold</h3><p>Рынок / Передача</p></div>
-        <div class="price">89 ₽</div>
-    </a>
-    <a href="ВАША_ССЫЛКА_ТУТ" class="option" onclick="return checkInput()">
-        <div class="info"><h3>200 Gold</h3><p>Рынок / Передача</p></div>
-        <div class="price">166 ₽</div>
-    </a>
-    <a href="ВАША_ССЫЛКА_ТУТ" class="option" onclick="return checkInput()">
-        <div class="info"><h3>500 Gold</h3><p>Пополнение через рынок</p></div>
-        <div class="price">373 ₽</div>
-    </a>
-    <a href="ВАША_ССЫЛКА_ТУТ" class="option" onclick="return checkInput()">
-        <div class="info"><h3>1000 Gold</h3><p>Выгодный набор</p></div>
-        <div class="price">724 ₽</div>
-    </a>
-    <a href="ВАША_ССЫЛКА_ТУТ" class="option" onclick="return checkInput()">
-        <div class="info"><h3>2000 Gold</h3><p>Пополнение через рынок</p></div>
-        <div class="price">1368 ₽</div>
-    </a>
-    <a href="ВАША_ССЫЛКА_ТУТ" class="option" onclick="return checkInput()">
-        <div class="info"><h3>3000 Gold</h3><p>Для топовых скинов</p></div>
-        <div class="price">1935 ₽</div>
-    </a>
-</div>
-
-<div class="section-title">Season Pass</div>
-<div class="services">
-    <a href="ВАША_ССЫЛКА_ТУТ" class="option" onclick="return checkInput()">
-        <div class="info"><h3>Gold Pass</h3><p>Текущий сезон (Full)</p></div>
-        <div class="price">568 ₽</div>
-    </a>
+<div id="cart-modal">
+    <div class="cart-content">
+        <span class="close-cart" onclick="toggleCart()">×</span>
+        <h2>Ваша корзина</h2>
+        <div id="cart-items-list"></div>
+        <div style="margin-top: 20px; border-top: 1px solid #444; padding-top: 10px;">
+            <strong>Итого: <span id="total-price" style="color: var(--accent);">0</span> ₽</strong>
+        </div>
+        <button class="pay-btn" onclick="processPayment()">Оформить заказ</button>
+    </div>
 </div>
 
 <div class="footer-panel">
     <div class="warning-text">
-        ⚠️ СНАЧАЛА УКАЖИТЕ ДАННЫЕ В ПОЛЕ ВЫШЕ<br>
-        <span class="vpn-note">ПРИ ОШИБКЕ ОПЛАТЫ — ВКЛЮЧИТЕ VPN (RU)!</span>
+        ВНИМАНИЕ: ПРИ ОШИБКЕ ОПЛАТЫ ВКЛЮЧИТЕ VPN (RU)<br>
+        <span style="color: #fff; background: var(--danger); padding: 0 5px;">ЮMoney: 4100119062204820</span>
     </div>
 </div>
 
 <script>
-    function checkInput() {
-        var id = document.getElementById('user_id').value;
-        if (!id || id.length < 3) {
-            alert("Пожалуйста, введите ваш ID или Telegram перед покупкой!");
-            return false;
+    let cart = [];
+    let discount = 1;
+
+    function showTab(tabId) {
+        document.querySelectorAll('.services').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        event.currentTarget.classList.add('active');
+    }
+
+    function applyPromo() {
+        const code = document.getElementById('promo_input').value.trim();
+        if (code === 'standoff20') {
+            discount = 0.8;
+            alert("Промокод применен! Скидка 20%");
+            updateUI();
+        } else {
+            discount = 1;
+            alert("Неверный промокод");
+            updateUI();
         }
-        return true;
+    }
+
+    function updateUI() {
+        document.querySelectorAll('.price').forEach(p => {
+            const base = parseInt(p.getAttribute('data-base'));
+            const oldPrice = p.previousElementSibling;
+            if (discount < 1) {
+                p.innerText = Math.round(base * discount) + " ₽";
+                oldPrice.style.display = "block";
+                oldPrice.innerText = base + " ₽";
+            } else {
+                p.innerText = base + " ₽";
+                oldPrice.style.display = "none";
+            }
+        });
+        updateCartTotal();
+    }
+
+    function addToCart(name, price) {
+        const userId = document.getElementById('user_id').value;
+        if (!userId || userId.length < 3) {
+            alert("Сначала введите ваш ID или Telegram!");
+            return;
+        }
+        cart.push({ name, price });
+        updateCartCount();
+        alert(`Добавлено: ${name}`);
+    }
+
+    function updateCartCount() {
+        document.getElementById('cart-count').innerText = cart.length;
+    }
+
+    function toggleCart() {
+        const modal = document.getElementById('cart-modal');
+        modal.style.display = (modal.style.display === 'block') ? 'none' : 'block';
+        renderCart();
+    }
+
+    function renderCart() {
+        const list = document.getElementById('cart-items-list');
+        list.innerHTML = cart.length === 0 ? '<p>Корзина пуста</p>' : '';
+        let total = 0;
+        
+        cart.forEach((item, index) => {
+            const currentPrice = Math.round(item.price * discount);
+            total += currentPrice;
+            list.innerHTML += `
+                <div class="cart-item">
+                    <span>${item.name}</span>
+                    <span>${currentPrice} ₽ <button onclick="removeItem(${index})" style="background:none; border:none; color:red; cursor:pointer; margin-left:10px;">✕</button></span>
+                </div>
+            `;
+        });
+        document.getElementById('total-price').innerText = total;
+    }
+
+    function removeItem(index) {
+        cart.splice(index, 1);
+        updateCartCount();
+        renderCart();
+    }
+
+    function updateCartTotal() {
+        if(document.getElementById('cart-modal').style.display === 'block') renderCart();
+    }
+
+    function processPayment() {
+        if (cart.length === 0) return alert("Корзина пуста");
+        const userId = document.getElementById('user_id').value;
+        let total = 0;
+        let names = [];
+        cart.forEach(i => {
+            total += Math.round(i.price * discount);
+            names.push(i.name);
+        });
+
+        const comment = encodeURIComponent(`ID: ${userId} | Товар: ${names.join(', ')}`);
+        const payUrl = `https://yoomoney.ru{total}?comment=${comment}`;
+        
+        window.location.href = payUrl;
     }
 </script>
 
 </body>
-</html>
+                    </html>
+    
