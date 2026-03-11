@@ -8,28 +8,15 @@
         :root { --accent: #ff8c00; --bg: #0d0d0f; --card: rgba(26, 27, 30, 0.98); --success: #00c853; --danger: #ff4444; }
         
         body { 
-            /* Стабильный фон Sandstone */
             background-color: #000;
             background-image: url('https://w.forfun.com');
-            background-repeat: no-repeat;
-            background-position: center center;
-            background-attachment: fixed;
-            background-size: cover;
-            color: white; 
-            font-family: -apple-system, system-ui, sans-serif; 
-            margin: 0; 
-            padding-bottom: 150px; 
-            overflow: hidden;
+            background-repeat: no-repeat; background-position: center center;
+            background-attachment: fixed; background-size: cover;
+            color: white; font-family: -apple-system, system-ui, sans-serif; 
+            margin: 0; padding-bottom: 150px; overflow: hidden;
         }
 
-        /* Темная подложка для читаемости текста */
-        body::before { 
-            content: ""; 
-            position: fixed; 
-            inset: 0; 
-            background: rgba(0,0,0,0.75); 
-            z-index: -1; 
-        }
+        body::before { content: ""; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: -1; }
 
         .header { text-align: center; padding: 20px; border-bottom: 2px solid var(--accent); background: rgba(17, 17, 17, 0.9); backdrop-filter: blur(15px); }
         .header h1 { margin: 0; font-size: 1.3rem; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); text-shadow: 0 0 15px var(--accent); }
@@ -38,168 +25,196 @@
         .tab-btn { background: var(--card); border: 1px solid #444; color: #888; padding: 10px; border-radius: 8px; cursor: pointer; text-transform: uppercase; font-size: 0.65rem; flex: 1; text-align: center; transition: 0.3s; }
         .tab-btn.active { border-color: var(--accent); color: white; background: rgba(255, 140, 0, 0.2); }
 
-        .container { max-width: 500px; margin: 0 auto; padding: 0 15px; height: 65vh; overflow-y: auto; scrollbar-width: none; }
+        .container { max-width: 500px; margin: 0 auto; padding: 0 15px; height: 60vh; overflow-y: auto; scrollbar-width: none; }
         .container::-webkit-scrollbar { display: none; }
         
         .user-input-box { background: var(--card); padding: 15px; border-radius: 15px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px); }
         input { width: 100%; padding: 12px; background: rgba(0,0,0,0.6); border: 1px solid #333; color: white; border-radius: 8px; box-sizing: border-box; outline: none; margin-bottom: 10px; font-size: 0.9rem; }
-        input:focus { border-color: var(--accent); }
 
         .services { display: none; grid-template-columns: 1fr; gap: 10px; }
         .services.active { display: grid; }
         
-        .option { background: var(--card); border: 1px solid rgba(255,255,255,0.05); padding: 18px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+        .option { background: var(--card); border: 1px solid rgba(255,255,255,0.05); padding: 18px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.2s; }
+        .option:active { transform: scale(0.97); }
         .price { color: var(--accent); font-weight: 800; font-size: 1.1rem; }
-
-        .locked-info { text-align: center; padding: 40px 20px; background: rgba(0,0,0,0.6); border-radius: 15px; border: 1px dashed var(--danger); margin-top: 10px; }
-        .locked-info h2 { color: var(--danger); font-size: 1.1rem; margin-bottom: 10px; }
-        .locked-info p { font-size: 0.8rem; color: #aaa; line-height: 1.5; }
-
-        .live-feed { position: fixed; bottom: 85px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; z-index: 1000; pointer-events: none; }
-        .feed-item { background: rgba(0,0,0,0.95); border-left: 4px solid var(--accent); padding: 10px 15px; border-radius: 8px; font-size: 0.75rem; margin-top: 8px; display: flex; align-items: center; justify-content: space-between; animation: slideUp 0.5s ease-out; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
         .cart-toggle { position: fixed; top: 20px; right: 20px; background: var(--accent); color: black; width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; z-index: 2000; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
         
-        #waiting-screen, #thanks-screen { position: fixed; inset: 0; background: #000; z-index: 5000; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
-        .loader { width: 50px; height: 50px; border: 5px solid #FFF; border-bottom-color: var(--accent); border-radius: 50%; animation: rotation 1s linear infinite; margin-bottom: 20px; }
-        @keyframes rotation { 0% { transform: rotate(0deg) } 100% { transform: rotate(360deg) } }
-
-        #cart-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 3000; display: none; backdrop-filter: blur(10px); }
-        .cart-content { max-width: 420px; margin: 60px auto; background: #16171a; border-radius: 20px; padding: 25px; border: 1px solid #333; position: relative; }
+        #cart-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 3000; display: none; backdrop-filter: blur(15px); }
+        .cart-content { max-width: 420px; margin: 40px auto; background: #16171a; border-radius: 24px; padding: 25px; border: 1px solid #333; position: relative; min-height: 450px; display: flex; flex-direction: column; }
         
-        .pay-btn { width: 100%; background: white; color: black; border: none; padding: 16px; border-radius: 12px; font-weight: bold; margin-top: 20px; cursor: pointer; font-size: 1rem; text-transform: uppercase; }
-        .fly-item { position: fixed; z-index: 9999; pointer-events: none; background: var(--accent); width: 20px; height: 20px; border-radius: 50%; transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .cart-list { max-height: 150px; overflow-y: auto; margin: 15px 0; }
+        .cart-item { display: flex; justify-content: space-between; background: rgba(255,255,255,0.03); padding: 10px; border-radius: 8px; margin-bottom: 5px; font-size: 0.85rem; }
+
+        .pay-btn { width: 100%; background: white; color: black; border: none; padding: 16px; border-radius: 12px; font-weight: bold; margin-top: auto; cursor: pointer; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; }
+        .pay-btn:hover { background: var(--accent); color: white; }
+
+        .loader { width: 45px; height: 45px; border: 4px solid rgba(255,255,255,0.1); border-left-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; margin: 20px auto; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .live-feed { position: fixed; bottom: 85px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; z-index: 1000; pointer-events: none; }
+        .feed-item { background: rgba(20, 20, 25, 0.95); border-left: 4px solid var(--accent); padding: 10px 15px; border-radius: 8px; font-size: 0.75rem; margin-top: 8px; display: flex; align-items: center; justify-content: space-between; animation: slideUp 0.5s ease-out; backdrop-filter: blur(5px); }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-<div class="cart-toggle" id="main-cart" onclick="toggleCart()">🛒 <span id="cart-count">0</span></div>
-
+<div class="cart-toggle" onclick="toggleCart()">🛒 <span id="cart-count">0</span></div>
 <div class="header"><h1>STANDOFF 2 LUXURY SHOP</h1></div>
 
 <div class="container">
     <div class="tabs">
-        <div class="tab-btn active" onclick="showTab('gold')">Gold</div>
-        <div class="tab-btn" onclick="showTab('tickets')">Билеты</div>
-        <div class="tab-btn" onclick="showTab('pass')">Уровни / Pass</div>
+        <div class="tab-btn active" id="tab-gold" onclick="showTab('gold')">Gold</div>
+        <div class="tab-btn" id="tab-tickets" onclick="showTab('tickets')">Билеты</div>
     </div>
 
     <div class="user-input-box">
-        <input type="text" id="user_id" placeholder="Ваш ID / Telegram">
+        <input type="number" id="user_id" placeholder="Ваш Игровой ID">
         <div style="display:flex; gap:8px;">
-            <input type="text" id="promo_input" placeholder="Промокод" style="margin-bottom:0;">
+            <input type="text" id="promo_input" placeholder="Промокод">
             <button onclick="applyPromo()" style="background:var(--accent); border:none; padding:0 15px; border-radius:8px; font-weight:bold; cursor:pointer;">OK</button>
         </div>
         <div id="active-promos" style="font-size: 0.7rem; color: var(--success); margin-top: 5px;"></div>
     </div>
 
-    <!-- ТОВАРЫ GOLD -->
     <div id="gold" class="services active">
-        <div class="option" onclick="buyItem(this, '100 Gold', 89)"><div class="info"><h3>100 Gold</h3><p>Начисление по ID</p></div><div class="price" data-base="89">89 ₽</div></div>
-        <div class="option" onclick="buyItem(this, '500 Gold', 373)"><div class="info"><h3>500 Gold</h3><p>Стандартный пак</p></div><div class="price" data-base="373">373 ₽</div></div>
-        <div class="option" onclick="buyItem(this, '1000 Gold', 724)"><div class="info"><h3>1000 Gold</h3><p>Выгодный выбор</p></div><div class="price" data-base="724">724 ₽</div></div>
-        <div class="option" onclick="buyItem(this, '3000 Gold', 1935)"><div class="info"><h3>3000 Gold</h3><p>Ультра пак</p></div><div class="price" data-base="1935">1935 ₽</div></div>
+        <div class="option" onclick="addToCart('100 Gold', 89)"><h3>100 Gold</h3><div class="price">89 ₽</div></div>
+        <div class="option" onclick="addToCart('500 Gold', 373)"><h3>500 Gold</h3><div class="price">373 ₽</div></div>
+        <div class="option" onclick="addToCart('1000 Gold', 724)"><h3>1000 Gold</h3><div class="price">724 ₽</div></div>
+        <div class="option" onclick="addToCart('3000 Gold', 1935)"><h3>3000 Gold</h3><div class="price">1935 ₽</div></div>
     </div>
 
-    <!-- ТОВАРЫ БИЛЕТЫ -->
     <div id="tickets" class="services">
-        <div class="option" onclick="buyItem(this, '100 Билетов', 89)"><div class="info"><h3>100 Билетов</h3><p>Promo Offer</p></div><div class="price" data-base="89">89 ₽</div></div>
-        <div class="option" onclick="buyItem(this, '500 Билетов', 369)"><div class="info"><h3>500 Билетов</h3><p>Medium Pack</p></div><div class="price" data-base="369">369 ₽</div></div>
-        <div class="option" onclick="buyItem(this, '1000 Билетов', 699)"><div class="info"><h3>1000 Билетов</h3><p>Maximum Value</p></div><div class="price" data-base="699">699 ₽</div></div>
+        <div class="option" onclick="addToCart('100 Билетов', 89)"><h3>100 Билетов</h3><div class="price">89 ₽</div></div>
+        <div class="option" onclick="addToCart('500 Билетов', 369)"><h3>500 Билетов</h3><div class="price">369 ₽</div></div>
     </div>
+</div>
 
-    <!-- ЗАГЛУШКА ПАСС -->
-    <div id="pass" class="services">
-        <div class="locked-info">
-            <h2>ВРЕМЕННО НЕ ДОСТУПНО</h2>
-            <p>Техническое обслуживание раздела Season Pass. <br>Попробуйте зайти позже.</p>
+<div id="cart-modal">
+    <div class="cart-content">
+        <!-- КОРЗИНА -->
+        <div id="step-cart">
+            <h2 style="margin:0">Корзина</h2>
+            <div class="cart-list" id="cart-list"></div>
+            <div style="border-top:1px solid #333; padding-top:15px; margin-bottom: 20px;">
+                <div style="display:flex; justify-content:space-between;">
+                    <span>Итого:</span>
+                    <b id="total-price" style="color:var(--accent); font-size:1.2rem;">0 ₽</b>
+                </div>
+            </div>
+            <p style="font-size: 0.7rem; color: #666; margin-bottom: 10px;">МЕТОД ОПЛАТЫ:</p>
+            <div style="border: 1px solid var(--accent); padding: 12px; border-radius: 12px; text-align: center; background: rgba(255,140,0,0.05); margin-bottom: 20px;">
+                <img src="https://upload.wikimedia.org" width="70" style="filter: brightness(2);">
+            </div>
+            <button class="pay-btn" onclick="processPayment()">
+                ОПЛАТИТЬ ПО СБП
+                <img src="https://upload.wikimedia.org" width="30" style="filter: brightness(0);">
+            </button>
+            <button onclick="toggleCart()" style="width:100%; background:none; border:none; color:#555; margin-top:10px; cursor:pointer;">Назад</button>
+        </div>
+
+        <!-- ОЖИДАНИЕ -->
+        <div id="step-waiting" style="display:none; flex-direction:column; align-items:center; justify-content:center; flex:1; text-align:center;">
+            <div class="loader"></div>
+            <h2 id="timer-text" style="color:var(--accent)">15:00</h2>
+            <p style="color:#888; font-size: 0.9rem;">Ожидание подтверждения транзакции банком...</p>
+            <p style="font-size: 0.7rem; color: #555;">Пожалуйста, не закрывайте вкладку.</p>
+        </div>
+
+        <!-- ОШИБКА -->
+        <div id="step-error" style="display:none; flex-direction:column; align-items:center; justify-content:center; flex:1; text-align:center;">
+            <div style="font-size: 50px; margin-bottom: 15px;">⚠️</div>
+            <h2 style="color:var(--danger)">ТОВАР НЕ ОПЛАЧЕН</h2>
+            <p style="color:#888; font-size: 0.8rem;">Платеж не найден в системе.<br>Попробуйте снова через 5 минут.</p>
+            <button class="pay-btn" onclick="location.reload()" style="margin-top:20px;">В МЕНЮ</button>
         </div>
     </div>
 </div>
 
 <div class="live-feed" id="live-feed"></div>
 
-<div id="cart-modal">
-    <div class="cart-content">
-        <h2 style="color:var(--accent); margin-top:0;">Корзина</h2>
-        <div id="cart-items-list" style="max-height:200px; overflow-y:auto;"></div>
-        <div style="border-top:1px solid #333; padding-top:15px; display:flex; justify-content:space-between; font-weight:bold; font-size:1.2rem;">
-            <span>ИТОГО:</span><span id="total-price" style="color:var(--accent)">0 ₽</span>
-        </div>
-        <button class="pay-btn" onclick="processPayment()">Оформить оплату</button>
-        <p onclick="toggleCart()" style="text-align:center; color:#555; cursor:pointer; margin-top:15px; font-size:0.8rem;">Вернуться назад</p>
-    </div>
-</div>
-
-<div id="waiting-screen">
-    <span class="loader"></span>
-    <h2 style="color:var(--accent)">Проверка транзакции...</h2>
-    <p style="color:#666; padding:0 20px; font-size:0.9rem;">Ожидание подтверждения от банка...</p>
-</div>
-
-<div id="thanks-screen">
-    <div style="background:#1a1b1e; padding:50px; border-radius:30px; border:2px solid var(--success); margin:20px;">
-        <div style="font-size:5rem;">✅</div>
-        <h1 style="color:white; margin-top:20px;">ОПЛАТА ПРИНЯТА</h1>
-        <p style="color:#aaa;">Начисление голды на ваш аккаунт будет завершено в течение 10 минут.</p>
-        <button onclick="location.reload()" style="background:var(--success); border:none; color:white; padding:12px 30px; border-radius:10px; margin-top:20px; cursor:pointer; font-weight:bold;">ЗАВЕРШИТЬ</button>
-    </div>
-</div>
-
 <script>
-    let cart = []; let disc = 1; let used = [];
-    function applyPromo() {
-        const c = document.getElementById('promo_input').value.trim().toUpperCase();
-        const pCodes = { 'SECRET50': 0.5, 'STANDOFF20': 0.8, 'FREE30G': 1 };
-        if(pCodes[c] && !used.includes(c)) { 
-            if(c !== 'FREE30G') { disc = pCodes[c]; updateP(); }
-            used.push(c); alert("Код применен!"); 
-            document.getElementById('active-promos').innerHTML += `<div>✓ Активирован: ${c}</div>`;
-        }
-    }
-    function updateP() { document.querySelectorAll('.price').forEach(p => p.innerText = Math.round(p.getAttribute('data-base') * disc) + " ₽"); }
-    function buyItem(el, name, price) {
-        if(!document.getElementById('user_id').value) return alert("Введите ID!");
-        const r = el.getBoundingClientRect(); const cr = document.getElementById('main-cart').getBoundingClientRect();
-        const f = document.createElement('div'); f.className = 'fly-item';
-        f.style.left = r.left + 'px'; f.style.top = r.top + 'px';
-        document.body.appendChild(f);
-        setTimeout(() => { f.style.left = cr.left + 'px'; f.style.top = cr.top + 'px'; f.style.transform = 'scale(0)'; }, 50);
-        setTimeout(() => { f.remove(); cart.push({name, price: Math.round(price * disc)}); document.getElementById('cart-count').innerText = cart.length; }, 600);
-    }
-    function toggleCart() { document.getElementById('cart-modal').style.display = (document.getElementById('cart-modal').style.display === 'block') ? 'none' : 'block'; renderCart(); }
-    function renderCart() {
-        const l = document.getElementById('cart-items-list');
-        l.innerHTML = cart.map(i => `<div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid #222;"><span>${i.name}</span><span>${i.price} ₽</span></div>`).join('');
-        document.getElementById('total-price').innerText = cart.reduce((a, b) => a + b.price, 0) + " ₽";
-    }
+    let cart = [];
+    let discount = 0;
+    const yoomoneyUrl = "https://yoomoney.ru";
+
     function showTab(id) {
         document.querySelectorAll('.services').forEach(s => s.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(id).classList.add('active'); event.currentTarget.classList.add('active');
+        document.getElementById(id).classList.add('active');
+        document.getElementById('tab-'+id).classList.add('active');
     }
+
+    function addToCart(name, price) {
+        if(!document.getElementById('user_id').value) return alert("Введите ID игрока!");
+        cart.push({name, price});
+        updateCartUI();
+    }
+
+    function updateCartUI() {
+        document.getElementById('cart-count').innerText = cart.length;
+        const list = document.getElementById('cart-list');
+        list.innerHTML = cart.map(item => `
+            <div class="cart-item"><span>${item.name}</span><b>${item.price} ₽</b></div>
+        `).join('');
+        let total = cart.reduce((s, i) => s + i.price, 0);
+        if(discount) total = Math.round(total * (1 - discount));
+        document.getElementById('total-price').innerText = total + " ₽";
+    }
+
+    function toggleCart() {
+        const m = document.getElementById('cart-modal');
+        m.style.display = m.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function applyPromo() {
+        if(document.getElementById('promo_input').value.toUpperCase() === 'LUXURY') {
+            discount = 0.15;
+            document.getElementById('active-promos').innerText = "Промокод LUXURY применен (-15%)";
+            updateCartUI();
+        }
+    }
+
     function processPayment() {
-        if(cart.length === 0) return;
-        const total = cart.reduce((a, b) => a + b.price, 0);
-        const note = encodeURIComponent(`ID:${document.getElementById('user_id').value} | ${cart.map(i=>i.name).join(', ')}`);
-        window.open(`https://yoomoney.ru{total}?comment=${note}`, '_blank');
-        document.getElementById('cart-modal').style.display = 'none';
-        document.getElementById('waiting-screen').style.display = 'flex';
+        if(cart.length === 0) return alert("Корзина пуста!");
         
-        const ph = ["Связь с банком...", "Проверка данных...", "Синхронизация...", "Ожидание оплаты..."];
-        let pi = 0; setInterval(() => { if(pi < ph.length-1) pi++; document.querySelector('#waiting-screen p').innerText = ph[pi]; }, 300000);
-        setTimeout(() => { document.getElementById('waiting-screen').style.display = 'none'; document.getElementById('thanks-screen').style.display = 'flex'; }, 1200000);
+        // РЕДИРЕКТ
+        window.open(yoomoneyUrl, '_blank'); 
+        
+        // ПЕРЕКЛЮЧЕНИЕ ЭКРАНА
+        document.getElementById('step-cart').style.display = 'none';
+        document.getElementById('step-waiting').style.display = 'flex';
+        
+        startTimer(900); // 15 минут
     }
-    const uUsers = ['Legend_S02', 'King_***', 'Den4ik', 'User_992', 'Top_Player'];
-    const iItems = ['1000 Gold', '3000 Gold', '1000 Билетов', '500 Gold'];
+
+    function startTimer(duration) {
+        let timer = duration, min, sec;
+        const display = document.getElementById('timer-text');
+        const interval = setInterval(() => {
+            min = parseInt(timer / 60, 10);
+            sec = parseInt(timer % 60, 10);
+            display.textContent = (min < 10 ? "0"+min : min) + ":" + (sec < 10 ? "0"+sec : sec);
+            if (--timer < 0) {
+                clearInterval(interval);
+                document.getElementById('step-waiting').style.display = 'none';
+                document.getElementById('step-error').style.display = 'flex';
+            }
+        }, 1000);
+    }
+
+    // Живая лента
     setInterval(() => {
         const feed = document.getElementById('live-feed');
-        const div = document.createElement('div'); div.className = 'feed-item';
-        div.innerHTML = `<span>👤 ${uUsers[Math.floor(Math.random()*uUsers.length)]} купил <b>${iItems[Math.floor(Math.random()*iItems.length)]}</b></span><span style="color:var(--success)">✓</span>`;
-        feed.appendChild(div); if(feed.children.length > 2) feed.removeChild(feed.children);
-        setTimeout(() => div.style.opacity = '0', 4000);
-    }, 9000);
+        const names = ["Killer", "Vortex", "Sashok", "Gamer", "Pro_SO2", "Legend"];
+        const el = document.createElement('div');
+        el.className = 'feed-item';
+        el.innerHTML = `<div><b>${names[Math.floor(Math.random()*names.length)]}_***</b><br><span style="color:#888">Купил: <span style="color:var(--accent)">Gold Pack</span></span></div><div>✔</div>`;
+        feed.appendChild(el);
+        setTimeout(() => el.remove(), 4000);
+    }, 6000);
 </script>
+
 </body>
-</html>
+    </html>
+                                                                                                            
