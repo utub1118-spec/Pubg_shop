@@ -26,6 +26,7 @@
         .tab-btn.active { border-color: var(--accent); color: white; background: rgba(255, 140, 0, 0.2); }
 
         .container { max-width: 450px; margin: 0 auto; padding: 0 10px; height: 60vh; overflow-y: auto; scrollbar-width: none; }
+        .container::-webkit-scrollbar { display: none; }
         
         .user-input-box { background: var(--card); padding: 12px; border-radius: 12px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.1); }
         input { width: 100%; padding: 10px; background: rgba(0,0,0,0.6); border: 1px solid #333; color: white; border-radius: 6px; box-sizing: border-box; outline: none; margin-bottom: 8px; font-size: 0.8rem; }
@@ -33,11 +34,11 @@
         .services { display: none; grid-template-columns: 1fr; gap: 8px; }
         .services.active { display: grid; }
         
-        .option { background: var(--card); border: 1px solid rgba(255,255,255,0.05); padding: 14px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+        .option { background: var(--card); border: 1px solid rgba(255,255,255,0.05); padding: 14px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.2s; }
+        .option:active { transform: scale(0.97); }
         .option h3 { margin: 0; font-size: 0.9rem; }
         .price { color: var(--accent); font-weight: 800; font-size: 1rem; }
 
-        /* КОМПАКТНАЯ ЛЕНТА */
         .live-feed { position: fixed; bottom: 90px; left: 15px; width: 180px; z-index: 1000; pointer-events: none; }
         .feed-item { 
             background: rgba(10, 10, 15, 0.98); border-left: 3px solid var(--accent); 
@@ -84,12 +85,11 @@
         <div id="active-promos" style="font-size: 0.6rem; color: var(--success); margin-top: 4px;"></div>
     </div>
 
-    <!-- ТОВАРЫ -->
     <div id="gold" class="services active">
         <div class="option" onclick="addToCart('100 Gold', 89)"><h3>100 Gold</h3><div class="price">89 ₽</div></div>
-        <div class="option" onclick="addToCart('500 Gold', 373)"><h3>500 Gold</h3><div class="price">373 ₽</div></div>
-        <div class="option" onclick="addToCart('1000 Gold', 724)"><h3>1000 Gold</h3><div class="price">724 ₽</div></div>
-        <div class="option" onclick="addToCart('3000 Gold', 1935)"><h3>3000 Gold</h3><div class="price">1935 ₽</div></div>
+        <div class="option" onclick="addToCart('500 Gold', 379)"><h3>500 Gold</h3><div class="price">379 ₽</div></div>
+        <div class="option" onclick="addToCart('1000 Gold', 729)"><h3>1000 Gold</h3><div class="price">729 ₽</div></div>
+        <div class="option" onclick="addToCart('3000 Gold', 1599)"><h3>3000 Gold</h3><div class="price">1599 ₽</div></div>
     </div>
 
     <div id="tickets" class="services">
@@ -136,6 +136,11 @@
     let discount = 0;
     const yoomoney = "https://yoomoney.ru";
 
+    function roundToNine(num) {
+        if (num === 0) return 0;
+        return Math.floor(num / 10) * 10 + 9;
+    }
+
     function switchTab(btn, id) {
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         document.querySelectorAll('.services').forEach(s => s.classList.remove('active'));
@@ -152,10 +157,10 @@
     function updateCart() {
         document.getElementById('cart-count').innerText = cart.length;
         const list = document.getElementById('cart-list');
-        list.innerHTML = cart.map(i => `<div style="display:flex; justify-content:space-between; margin-bottom:5px;"><span>${i.name}</span><b>${i.price} ₽</b></div>`).join('');
+        list.innerHTML = cart.map(i => `<div style="display:flex; justify-content:space-between; margin-bottom:5px;"><span>${i.name}</span><b>${roundToNine(i.price)} ₽</b></div>`).join('');
         let total = cart.reduce((s, i) => s + i.price, 0);
-        if(discount) total = Math.round(total * (1 - discount));
-        document.getElementById('total-price').innerText = total + " ₽";
+        if(discount) total = total * (1 - discount);
+        document.getElementById('total-price').innerText = roundToNine(total) + " ₽";
     }
 
     function toggleCart() {
@@ -188,7 +193,6 @@
         }, 1000);
     }
 
-    // ЛЕНТА - 2 СЕКУНДЫ
     setInterval(() => {
         const feed = document.getElementById('live-feed');
         const names = ["Killer", "Admin", "Top_G", "Sashok", "Vortex", "Legenda"];
@@ -196,16 +200,13 @@
         el.className = 'feed-item';
         el.innerHTML = `<span><b>${names[Math.floor(Math.random()*names.length)]}</b> купил Gold</span> <span style="color:var(--success)">✔</span>`;
         feed.appendChild(el);
-        
         setTimeout(() => el.classList.add('show'), 100);
-        
         setTimeout(() => {
             el.classList.remove('show');
             setTimeout(() => el.remove(), 500);
-        }, 2000); // Ровно 2 секунды
+        }, 2000);
     }, 4000);
 </script>
 
 </body>
-            </html>
-    
+</html>
