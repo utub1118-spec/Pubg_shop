@@ -3,198 +3,214 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>STANDOFF 2 | PREMIUM SHOP</title>
+    <title>STANDOFF 2 | LUXURY SHOP</title>
     <style>
-        :root { --accent: #ff8c00; --bg: #0d0d0f; --card: rgba(26, 27, 30, 0.9); --danger: #ff4444; --success: #00c853; }
+        :root { --accent: #ff8c00; --bg: #0d0d0f; --card: rgba(26, 27, 30, 0.96); --danger: #ff4444; --success: #00c853; }
         
         body { 
-            background: #000 url('https://wallpapercave.com') no-repeat center center fixed; 
-            background-size: cover; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding-bottom: 120px; overflow-x: hidden;
+            background: #000 url('https://w.forfun.com') no-repeat center center fixed; 
+            background-size: cover; color: white; font-family: -apple-system, sans-serif; margin: 0; padding-bottom: 120px; overflow-x: hidden;
         }
 
-        body::before { content: ""; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: -1; }
+        body::before { content: ""; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: -1; }
 
-        .header { text-align: center; padding: 25px; border-bottom: 2px solid var(--accent); background: rgba(17, 17, 17, 0.8); backdrop-filter: blur(10px); }
-        .header h1 { margin: 0; font-size: 1.5rem; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); text-shadow: 0 0 15px rgba(255,140,0,0.5); }
+        .header { text-align: center; padding: 25px; border-bottom: 2px solid var(--accent); background: rgba(17, 17, 17, 0.85); backdrop-filter: blur(15px); }
+        .header h1 { margin: 0; font-size: 1.4rem; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); text-shadow: 0 0 15px var(--accent); }
 
-        .tabs { display: flex; justify-content: center; gap: 8px; margin: 20px 0; overflow-x: auto; padding: 5px 15px; }
-        .tab-btn { background: var(--card); border: 1px solid #444; color: #bbb; padding: 12px 20px; border-radius: 8px; cursor: pointer; text-transform: uppercase; font-size: 0.7rem; white-space: nowrap; transition: 0.3s; }
-        .tab-btn.active { border-color: var(--accent); color: white; background: rgba(255, 140, 0, 0.2); box-shadow: 0 0 10px rgba(255,140,0,0.2); }
+        .tabs { display: flex; justify-content: center; gap: 8px; margin: 20px 0; padding: 0 15px; }
+        .tab-btn { background: var(--card); border: 1px solid #444; color: #888; padding: 12px; border-radius: 10px; cursor: pointer; text-transform: uppercase; font-size: 0.7rem; flex: 1; transition: 0.3s; }
+        .tab-btn.active { border-color: var(--accent); color: white; background: rgba(255, 140, 0, 0.2); }
 
         .container { max-width: 500px; margin: 0 auto; padding: 0 15px; }
         
-        .user-input-box { background: var(--card); padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.1); }
-        input { width: 100%; padding: 12px; background: rgba(0,0,0,0.5); border: 1px solid #444; color: white; border-radius: 6px; box-sizing: border-box; outline: none; margin-bottom: 10px; font-size: 0.9rem; }
+        .user-input-box { background: var(--card); padding: 15px; border-radius: 15px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px); }
+        input { width: 100%; padding: 12px; background: rgba(0,0,0,0.6); border: 1px solid #333; color: white; border-radius: 8px; box-sizing: border-box; outline: none; margin-bottom: 10px; font-size: 0.9rem; }
         input:focus { border-color: var(--accent); }
-        input:disabled { opacity: 0.5; border-color: var(--success); }
+
+        .active-promos-list { font-size: 0.7rem; color: var(--success); margin-top: 5px; display: flex; flex-direction: column; gap: 3px; }
 
         .services { display: none; grid-template-columns: 1fr; gap: 10px; }
         .services.active { display: grid; }
         
         .option { 
-            background: var(--card); border: 1px solid rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; 
+            background: var(--card); border: 1px solid rgba(255,255,255,0.05); padding: 18px; border-radius: 12px; 
             display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: 0.2s;
         }
-        .option:active { transform: scale(0.97); }
+        .option:active { transform: scale(0.96); }
 
-        .info h3 { margin: 0; font-size: 0.9rem; text-transform: uppercase; }
-        .info p { margin: 3px 0 0; font-size: 0.7rem; color: #777; }
-        .price { color: var(--accent); font-weight: 800; font-size: 1.1rem; }
+        .price { color: var(--accent); font-weight: 800; font-size: 1.2rem; }
 
-        .fly-item {
-            position: fixed; z-index: 9999; pointer-events: none;
-            background: var(--accent); width: 20px; height: 20px; border-radius: 50%;
-            box-shadow: 0 0 10px var(--accent);
-            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
+        .fly-item { position: fixed; z-index: 9999; pointer-events: none; background: var(--accent); width: 25px; height: 25px; border-radius: 50%; box-shadow: 0 0 15px var(--accent); transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 
-        .cart-toggle { 
-            position: fixed; top: 20px; right: 20px; background: var(--accent); color: black; 
-            width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; 
-            justify-content: center; font-weight: bold; cursor: pointer; z-index: 2000;
-        }
+        .cart-toggle { position: fixed; top: 20px; right: 20px; background: var(--accent); color: black; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; z-index: 2000; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
         .cart-shake { animation: shake 0.4s ease-in-out; }
         @keyframes shake { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.3) rotate(10deg); } }
 
-        #cart-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 3000; display: none; backdrop-filter: blur(8px); }
-        .cart-content { max-width: 400px; margin: 80px auto; background: #1a1b1e; border-radius: 15px; padding: 20px; border: 1px solid var(--accent); }
+        #cart-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 3000; display: none; backdrop-filter: blur(10px); }
+        .cart-content { max-width: 420px; margin: 80px auto; background: #16171a; border-radius: 20px; padding: 25px; border: 1px solid #333; position: relative; }
+        
+        .apple-pay-btn { width: 100%; background: white; color: black; border: none; padding: 16px; border-radius: 12px; font-weight: bold; margin-top: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 1.1rem; }
 
-        #thanks-screen {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 5000;
-            display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center;
-        }
+        /* Прогресс-бар */
+        #processing-screen { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 4000; display: none; flex-direction: column; align-items: center; justify-content: center; }
+        .progress-container { width: 80%; max-width: 300px; height: 4px; background: #333; border-radius: 10px; overflow: hidden; margin-top: 20px; }
+        .progress-bar { width: 0%; height: 100%; background: var(--accent); transition: width 0.1s linear; }
+
+        #thanks-screen { position: fixed; inset: 0; background: #000; z-index: 5000; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
     </style>
 </head>
 <body>
 
 <div class="cart-toggle" id="main-cart" onclick="toggleCart()">🛒 <span id="cart-count">0</span></div>
 
-<div class="header"><h1>STANDOFF 2 GOLD SHOP</h1></div>
+<div class="header"><h1>STANDOFF 2 LUXURY SHOP</h1></div>
 
 <div class="container">
     <div class="tabs">
-        <div class="tab-btn active" onclick="showTab('gold')">Золото</div>
-        <div class="tab-btn" onclick="showTab('tickets')">Билеты (-50%)</div>
+        <div class="tab-btn active" onclick="showTab('gold')">Gold</div>
+        <div class="tab-btn" onclick="showTab('tickets')">Билеты</div>
         <div class="tab-btn" onclick="showTab('pass')">Pass</div>
     </div>
 
     <div class="user-input-box">
         <input type="text" id="user_id" placeholder="Ваш ID / Telegram">
-        <div style="display:flex; gap:5px;">
-            <input type="text" id="promo_input" placeholder="Промокод">
-            <button id="promo_btn" onclick="applyPromo()" style="height:42px; background:var(--accent); border:none; padding:0 15px; border-radius:5px; font-weight:bold; cursor:pointer;">OK</button>
+        <div style="display:flex; gap:8px;">
+            <input type="text" id="promo_input" placeholder="Введите промокод" style="margin-bottom:0;">
+            <button onclick="applyPromo()" style="background:var(--accent); border:none; padding:0 20px; border-radius:8px; font-weight:bold; cursor:pointer;">OK</button>
         </div>
+        <div id="active-promos" class="active-promos-list"></div>
     </div>
 
-    <!-- ЗОЛОТО -->
     <div id="gold" class="services active">
-        <div class="option" onclick="buyItem(this, '100 Gold', 89)"><div class="info"><h3>100 Gold</h3><p>Рынок</p></div><div class="price" data-base="89">89 ₽</div></div>
-        <div class="option" onclick="buyItem(this, '500 Gold', 373)"><div class="info"><h3>500 Gold</h3><p>Начисление</p></div><div class="price" data-base="373">373 ₽</div></div>
-        <div class="option" onclick="buyItem(this, '1000 Gold', 724)"><div class="info"><h3>1000 Gold</h3><p>Хит продаж</p></div><div class="price" data-base="724">724 ₽</div></div>
-        <div class="option" onclick="buyItem(this, '3000 Gold', 1935)"><div class="info"><h3>3000 Gold</h3><p>Для элиты</p></div><div class="price" data-base="1935">1935 ₽</div></div>
+        <div class="option" onclick="buyItem(this, '500 Gold', 373)"><div class="info"><h3>500 Gold</h3><p>Fast Delivery</p></div><div class="price" data-base="373">373 ₽</div></div>
+        <div class="option" onclick="buyItem(this, '1000 Gold', 724)"><div class="info"><h3>1000 Gold</h3><p>Popular Choice</p></div><div class="price" data-base="724">724 ₽</div></div>
+        <div class="option" onclick="buyItem(this, '3000 Gold', 1935)"><div class="info"><h3>3000 Gold</h3><p>Best Value</p></div><div class="price" data-base="1935">1935 ₽</div></div>
     </div>
 
-    <!-- БИЛЕТЫ (УНИЖЕНЫ ВДВОЕ) -->
     <div id="tickets" class="services">
-        <div class="option" onclick="buyItem(this, 'Rare Ticket', 45)"><div class="info"><h3>Rare Ticket</h3><p><s>90 ₽</s></p></div><div class="price" data-base="45">45 ₽</div></div>
-        <div class="option" onclick="buyItem(this, 'Epic Ticket', 125)"><div class="info"><h3>Epic Ticket</h3><p><s>250 ₽</s></p></div><div class="price" data-base="125">125 ₽</div></div>
-        <div class="option" onclick="buyItem(this, 'Legendary Ticket', 445)"><div class="info"><h3>Legendary Ticket</h3><p><s>890 ₽</s></p></div><div class="price" data-base="445">445 ₽</div></div>
+        <div class="option" onclick="buyItem(this, '100 Билетов', 89)"><div class="info"><h3>100 Билетов</h3><p>Promo Pack</p></div><div class="price" data-base="89">89 ₽</div></div>
+        <div class="option" onclick="buyItem(this, '500 Билетов', 369)"><div class="info"><h3>500 Билетов</h3><p>Medium Pack</p></div><div class="price" data-base="369">369 ₽</div></div>
+        <div class="option" onclick="buyItem(this, '1000 Билетов', 699)"><div class="info"><h3>1000 Билетов</h3><p>Maximum Pack</p></div><div class="price" data-base="699">699 ₽</div></div>
     </div>
 
-    <!-- ПАСС -->
     <div id="pass" class="services">
-        <div class="option" onclick="buyItem(this, 'Gold Pass', 568)"><div class="info"><h3>Gold Pass</h3><p>Текущий сезон</p></div><div class="price" data-base="568">568 ₽</div></div>
+        <div class="option" onclick="buyItem(this, 'Gold Pass', 568)"><div class="info"><h3>Gold Pass</h3><p>Season 7</p></div><div class="price" data-base="568">568 ₽</div></div>
     </div>
 </div>
 
 <div id="cart-modal">
     <div class="cart-content">
-        <h2 style="color:var(--accent); margin-top:0;">Ваш заказ</h2>
-        <div id="cart-items-list" style="max-height:200px; overflow-y:auto;"></div>
-        <div id="bonus-info" style="color:var(--success); font-size:0.8rem; margin:10px 0;"></div>
-        <div style="border-top:1px solid #333; padding-top:15px; display:flex; justify-content:space-between; font-weight:bold;">
+        <h2 style="color:var(--accent); margin-top:0;">Корзина</h2>
+        <div id="cart-items-list" style="max-height:250px; overflow-y:auto;"></div>
+        <div id="bonus-status" style="color:var(--success); font-size:0.8rem; margin:10px 0;"></div>
+        <div style="border-top:1px solid #333; padding-top:15px; display:flex; justify-content:space-between; font-size:1.3rem; font-weight:bold;">
             <span>ИТОГО:</span><span id="total-price" style="color:var(--accent)">0 ₽</span>
         </div>
-        <button onclick="processPayment()" style="width:100%; background:var(--success); color:white; border:none; padding:15px; border-radius:10px; font-weight:bold; margin-top:20px; cursor:pointer;">ОПЛАТИТЬ</button>
-        <p onclick="toggleCart()" style="text-align:center; color:#666; cursor:pointer; margin-top:15px;">Закрыть</p>
+        <button class="apple-pay-btn" onclick="startProcessing()"><span></span> Pay</button>
+        <p onclick="toggleCart()" style="text-align:center; color:#666; cursor:pointer; margin-top:15px; font-size:0.9rem;">Продолжить покупки</p>
     </div>
 </div>
 
-<div id="thanks-screen" onclick="location.reload()">
-    <div style="background:var(--card); padding:40px; border-radius:20px; border:2px solid var(--accent); margin:20px;">
-        <div style="font-size: 5rem;">🏆</div>
-        <h1 style="color:var(--accent);">СПАСИБО!</h1>
-        <p>Платеж обрабатывается. Ожидайте начисления.<br>Нажми для возврата.</p>
+<div id="processing-screen">
+    <div style="font-size:3rem; margin-bottom:10px;"></div>
+    <div style="font-size:1.2rem; font-weight:bold;">Проверка транзакции...</div>
+    <div class="progress-container"><div class="progress-bar" id="p-bar"></div></div>
+</div>
+
+<div id="thanks-screen">
+    <div style="background:#1a1b1e; padding:50px; border-radius:30px; border:2px solid var(--success); margin:20px;">
+        <div style="color:var(--success); font-size:5rem;">✓</div>
+        <h1 style="color:white; margin-top:20px;">ОПЛАЧЕНО</h1>
+        <p style="color:#aaa;">Заказ принят.<br>Начисление в течение 10 минут.</p>
+        <button onclick="location.reload()" style="background:var(--success); border:none; color:white; padding:12px 30px; border-radius:10px; margin-top:20px; cursor:pointer;">ГОТОВО</button>
     </div>
 </div>
 
 <script>
     let cart = [];
-    let disc = 1;
-    let used = [];
-    let bonus = false;
+    let discountMultiplier = 1;
+    let usedCodes = [];
+    let isBonusActive = false;
 
-    const promos = { 'LUCKY10':0.9, 'BATTLE25':0.75, 'GIFT40':0.6, 'SECRET50':0.5, 'STANDOFF20':0.8, 'FREE30G':'b', 'GIVEAWAY':'b' };
+    const promoCodes = {
+        'LUCKY10': 0.9, 'BATTLE25': 0.75, 'GIFT40': 0.6, 'SECRET50': 0.5, 'STANDOFF20': 0.8,
+        'FREE30G': 'bonus', 'GIVEAWAY': 'bonus'
+    };
 
-    function playSound() {
-        const ctx = new (window.AudioContext || window.webkitAudioContext)();
-        const osc = ctx.createOscillator();
-        const g = ctx.createGain();
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(880, ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(110, ctx.currentTime + 0.1);
-        g.gain.setValueAtTime(0.1, ctx.currentTime);
-        g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
-        osc.connect(g); g.connect(ctx.destination);
-        osc.start(); osc.stop(ctx.currentTime + 0.1);
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    function playSound(mode) {
+        if(mode === 'add') {
+            const playNote = (f, t) => {
+                const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
+                o.connect(g); g.connect(audioCtx.destination);
+                o.frequency.setValueAtTime(f, audioCtx.currentTime + t);
+                g.gain.setValueAtTime(0.1, audioCtx.currentTime + t);
+                g.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + t + 0.1);
+                o.start(audioCtx.currentTime + t); o.stop(audioCtx.currentTime + t + 0.1);
+            };
+            playNote(1200, 0); playNote(1500, 0.05);
+        } else if(mode === 'pay') {
+            [440, 554, 659, 880].forEach((f, i) => {
+                const o = audioCtx.createOscillator(); const g = audioCtx.createGain();
+                o.connect(g); g.connect(audioCtx.destination);
+                o.frequency.setValueAtTime(f, audioCtx.currentTime + i*0.08);
+                g.gain.setValueAtTime(0.1, audioCtx.currentTime + i*0.08);
+                g.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + i*0.08 + 0.2);
+                o.start(audioCtx.currentTime + i*0.08); o.stop(audioCtx.currentTime + i*0.08 + 0.2);
+            });
+        }
     }
 
     function applyPromo() {
         const inp = document.getElementById('promo_input');
-        const c = inp.value.trim().toUpperCase();
-        if(used.includes(c)) return alert("Использовано!");
-        if(promos[c]) {
-            if(promos[c] === 'b') { bonus = true; alert("Бонус +30G!"); }
-            else { disc = promos[c]; alert("Скидка активирована!"); updateP(); }
-            used.push(c);
-            inp.disabled = true; document.getElementById('promo_btn').style.background = "#222";
-        } else alert("Неверный код");
+        const code = inp.value.trim().toUpperCase();
+        if(!promoCodes[code]) return alert("Код не найден!");
+        if(usedCodes.includes(code)) return alert("Код уже использован!");
+        if(promoCodes[code] === 'bonus') { isBonusActive = true; document.getElementById('active-promos').innerHTML += `<span>✓ Бонус 30G активирован</span>`; }
+        else { discountMultiplier = promoCodes[code]; document.getElementById('active-promos').innerHTML += `<span>✓ Скидка ${(1-discountMultiplier)*100}%</span>`; updateCatalogPrices(); }
+        usedCodes.push(code); inp.value = "";
     }
 
-    function updateP() {
-        document.querySelectorAll('.price').forEach(p => p.innerText = Math.round(p.getAttribute('data-base') * disc) + " ₽");
+    function updateCatalogPrices() {
+        document.querySelectorAll('.price').forEach(p => { p.innerText = Math.round(p.getAttribute('data-base') * discountMultiplier) + " ₽"; });
     }
 
     function buyItem(el, name, price) {
         if(!document.getElementById('user_id').value) return alert("Введите ID!");
-        playSound();
-        const r = el.getBoundingClientRect();
-        const cr = document.getElementById('main-cart').getBoundingClientRect();
-        const f = document.createElement('div');
-        f.className = 'fly-item';
+        playSound('add');
+        const r = el.getBoundingClientRect(); const cr = document.getElementById('main-cart').getBoundingClientRect();
+        const f = document.createElement('div'); f.className = 'fly-item';
         f.style.left = r.left + 'px'; f.style.top = r.top + 'px';
         document.body.appendChild(f);
         setTimeout(() => { f.style.left = cr.left + 'px'; f.style.top = cr.top + 'px'; f.style.transform = 'scale(0)'; }, 50);
         setTimeout(() => {
-            f.remove();
-            document.getElementById('main-cart').classList.add('cart-shake');
+            f.remove(); document.getElementById('main-cart').classList.add('cart-shake');
             setTimeout(() => document.getElementById('main-cart').classList.remove('cart-shake'), 400);
-            cart.push({name, price: Math.round(price * disc)});
+            cart.push({name, price: Math.round(price * discountMultiplier)});
             document.getElementById('cart-count').innerText = cart.length;
         }, 600);
     }
 
     function toggleCart() {
-        document.getElementById('cart-modal').style.display = (document.getElementById('cart-modal').style.display === 'block') ? 'none' : 'block';
-        render();
+        const m = document.getElementById('cart-modal');
+        m.style.display = (m.style.display === 'block') ? 'none' : 'block';
+        renderCart();
     }
 
-    function render() {
+    function renderCart() {
         const l = document.getElementById('cart-items-list');
-        l.innerHTML = cart.map(i => `<div style="display:flex; justify-content:space-between; margin:10px 0;"><span>${i.name}</span><span>${i.price} ₽</span></div>`).join('');
+        l.innerHTML = cart.length === 0 ? '<p style="color:#444; text-align:center;">Пусто</p>' : '';
+        cart.forEach((it, idx) => {
+            l.innerHTML += `<div style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid #222;">
+                <span>${it.name}</span><span>${it.price} ₽ <b onclick="removeItem(${idx})" style="color:red; margin-left:10px; cursor:pointer;">✕</b></span>
+            </div>`;
+        });
         document.getElementById('total-price').innerText = cart.reduce((a, b) => a + b.price, 0) + " ₽";
-        document.getElementById('bonus-info').innerText = bonus ? "🎁 +30 Gold Bonus" : "";
+        document.getElementById('bonus-status').innerText = isBonusActive && cart.length > 0 ? "🎁 +30 Gold начислено бонусом" : "";
     }
+
+    function removeItem(i) { cart.splice(i, 1); document.getElementById('cart-count').innerText = cart.length; renderCart(); }
 
     function showTab(id) {
         document.querySelectorAll('.services').forEach(s => s.classList.remove('active'));
@@ -203,15 +219,36 @@
         event.currentTarget.classList.add('active');
     }
 
-    function processPayment() {
+    function startProcessing() {
         if(cart.length === 0) return;
-        const total = cart.reduce((a, b) => a + b.price, 0);
-        const comment = encodeURIComponent("ID:"+document.getElementById('user_id').value+" | "+cart.map(i=>i.name).join(', ')+(bonus?' +Bonus':''));
-        window.open(`https://yoomoney.ru{total}?comment=${comment}`, '_blank');
         document.getElementById('cart-modal').style.display = 'none';
-        document.getElementById('thanks-screen').style.display = 'flex';
+        document.getElementById('processing-screen').style.display = 'flex';
+        
+        let width = 0;
+        const bar = document.getElementById('p-bar');
+        const interval = setInterval(() => {
+            if (width >= 100) {
+                clearInterval(interval);
+                processPayment();
+            } else {
+                width += 2;
+                bar.style.width = width + '%';
+            }
+        }, 30);
+    }
+
+    function processPayment() {
+        playSound('pay');
+        const id = document.getElementById('user_id').value;
+        const total = cart.reduce((a, b) => a + b.price, 0);
+        const note = encodeURIComponent(`ID:${id} | ${cart.map(i=>i.name).join(', ')}${isBonusActive ? ' +30G' : ''}`);
+        
+        setTimeout(() => {
+            window.open(`https://yoomoney.ru{total}?comment=${note}`, '_blank');
+            document.getElementById('processing-screen').style.display = 'none';
+            document.getElementById('thanks-screen').style.display = 'flex';
+        }, 800);
     }
 </script>
 </body>
-    </html>
-        
+</html>
